@@ -1,103 +1,123 @@
-import Image from "next/image";
+import FeatureCard from "@/components/FeatureCard";
+import PricingCard from "@/components/PricingCard";
+import TestimonialCard from "@/components/TestimonialCard";
+import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+    <main className="container max-w-6xl mx-auto px-8">
+      {/* Hero Section */}
+      <section className="hero text-center py-24">
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-gradient-to-r from-[var(--accent)] to-[var(--accent-secondary)] bg-clip-text text-transparent">
+          Revolutionize Your SAT Prep
+        </h1>
+        <p className="max-w-2xl mx-auto text-xl text-[var(--text-secondary)] mb-10">
+          Unlock your potential with AI-powered learning. Personalized
+          strategies, intelligent insights, and adaptive study plans tailored
+          just for you.
+        </p>
+        <div className="flex justify-center gap-4">
+          <a href="/study-plan-onboard" className="btn btn-primary">
+            <i className="fas fa-rocket mr-2"></i>
+            Get Started
           </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
+          <a href="#features" className="btn btn-secondary">
+            <i className="fas fa-info-circle mr-2"></i>
+            Learn More
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="my-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <FeatureCard
+            icon="chart-line"
+            title="AI Study Plan"
+            description="Dynamically generated roadmap that adapts to your unique learning style and performance."
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <FeatureCard
+            icon="robot"
+            title="Smart Tutoring"
+            description="24/7 AI-powered tutor providing instant, contextual explanations and personalized support."
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
+          <FeatureCard
+            icon="analytics"
+            title="Performance Analytics"
+            description="Comprehensive insights and predictive analytics to track and boost your SAT preparation progress."
           />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="my-16">
+        <h2 className="text-3xl font-bold text-center mb-4">
+          Flexible Pricing Plans
+        </h2>
+        <p className="text-lg text-center text-[var(--text-secondary)] mb-12">
+          Choose the perfect plan for your SAT preparation journey
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <PricingCard
+            title="Basic"
+            price="$9.99/month"
+            features={[
+              "Basic Study Materials",
+              "Limited Practice Tests",
+              "Standard AI Tutor",
+            ]}
+            ctaText="Get Started"
+          />
+          <PricingCard
+            title="Pro"
+            price="$19.99/month"
+            features={[
+              "Comprehensive Study Materials",
+              "Unlimited Practice Tests",
+              "Advanced AI Tutor",
+              "Performance Analytics",
+            ]}
+            ctaText="Get Started"
+          />
+          <PricingCard
+            title="Enterprise"
+            price="$49.99/month"
+            features={[
+              "All Pro Features",
+              "Personal Mentor",
+              "Priority Support",
+              "Custom Learning Path",
+            ]}
+            ctaText="Contact Sales"
+          />
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section id="testimonials" className="my-16">
+        <h2 className="text-3xl font-bold text-center mb-4">
+          What Our Students Say
+        </h2>
+        <p className="text-lg text-center text-[var(--text-secondary)] mb-12">
+          Real stories from students who transformed their SAT scores
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <TestimonialCard
+            initials="JS"
+            name="John Smith"
+            role="High School Senior"
+            quote="StudyPro's AI tutor helped me improve my SAT score by 200 points. The personalized study plan was a game-changer!"
+          />
+          <TestimonialCard
+            initials="EM"
+            name="Emma Martinez"
+            role="College Prep Student"
+            quote="I was struggling with math, but the adaptive learning technology made complex problems feel manageable."
+          />
+        </div>
+      </section>
+
+      <Footer />
+    </main>
   );
 }
