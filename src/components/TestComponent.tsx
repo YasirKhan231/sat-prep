@@ -11,7 +11,12 @@ interface Question {
   explanation: string;
 }
 
-export default function TestComponent({ testId }: { testId: string }) {
+interface TestComponentProps {
+  testId: string;
+}
+
+// ... rest of your component code remains the same
+export default function TestComponent({ testId }: TestComponentProps) {
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -19,7 +24,6 @@ export default function TestComponent({ testId }: { testId: string }) {
   const [loading, setLoading] = useState(true);
   const [timeLeft, setTimeLeft] = useState(45 * 60); // 45 minutes in seconds
 
-  // Mock data - in a real app, you would fetch this from your backend
   useEffect(() => {
     const mockQuestions: Question[] = Array.from({ length: 20 }, (_, i) => ({
       id: i + 1,
@@ -35,12 +39,10 @@ export default function TestComponent({ testId }: { testId: string }) {
     setQuestions(mockQuestions);
     setLoading(false);
 
-    // Start timer
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          // Handle time up
           return 0;
         }
         return prev - 1;
@@ -59,7 +61,6 @@ export default function TestComponent({ testId }: { testId: string }) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedOption(null);
     } else {
-      // Submit test
       router.push("/tests/completed");
     }
   };
