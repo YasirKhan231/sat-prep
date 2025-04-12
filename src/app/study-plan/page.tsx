@@ -1,33 +1,32 @@
-// app/study-plan/page.tsx
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Inter } from "next/font/google";
+import { useState } from "react"
+import { Inter } from "next/font/google"
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"] })
 
 type Plan = {
-  id: string;
-  emoji: string;
-  title: string;
-  description: string;
-  duration?: string;
-  intensity?: string;
-  mockTests?: string;
-  dailyStudy?: string;
-};
+  id: string
+  emoji: string
+  title: string
+  description: string
+  duration?: string
+  intensity?: string
+  mockTests?: string
+  dailyStudy?: string
+}
 
 type Task = {
-  id: string;
-  type?: "reading" | "math" | "writing";
-  title: string;
-  duration: string;
-};
+  id: string
+  type?: "reading" | "math" | "writing"
+  title: string
+  duration: string
+}
 
 type Day = {
-  name: string;
-  tasks: Task[];
-};
+  name: string
+  tasks: Task[]
+}
 
 const plansData: Plan[] = [
   {
@@ -130,7 +129,7 @@ const plansData: Plan[] = [
     mockTests: "1 total",
     dailyStudy: "30 minutes",
   },
-];
+]
 
 const sampleWeek: Day[] = [
   {
@@ -246,7 +245,7 @@ const sampleWeek: Day[] = [
       { id: "18", title: "Practice Weak Areas", duration: "2h" },
     ],
   },
-];
+]
 
 const weekViewTasks = [
   {
@@ -273,17 +272,15 @@ const weekViewTasks = [
     ],
   },
   // ... other days same as sampleWeek
-];
+]
 
 export default function StudyPlanSystem() {
-  const [currentView, setCurrentView] = useState<
-    "selection" | "detail" | "dashboard" | "customization"
-  >("selection");
-  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
-  const [studyTime, setStudyTime] = useState("3-4 hours");
-  const [focusArea, setFocusArea] = useState("Balanced");
-  const [practiceTests, setPracticeTests] = useState("2 per week");
+  const [currentView, setCurrentView] = useState<"selection" | "detail" | "dashboard" | "customization">("selection")
+  const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null)
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false)
+  const [studyTime, setStudyTime] = useState("3-4 hours")
+  const [focusArea, setFocusArea] = useState("Balanced")
+  const [practiceTests, setPracticeTests] = useState("2 per week")
   const [studyDays, setStudyDays] = useState({
     monday: true,
     tuesday: true,
@@ -292,104 +289,85 @@ export default function StudyPlanSystem() {
     friday: true,
     saturday: true,
     sunday: true,
-  });
+  })
   const [notificationPrefs, setNotificationPrefs] = useState({
     dailyReminders: true,
     progressUpdates: true,
     testReminders: true,
-  });
+  })
 
   const handlePlanSelect = (plan: Plan) => {
-    setSelectedPlan(plan);
-    setCurrentView("detail");
-  };
+    setSelectedPlan(plan)
+    setCurrentView("detail")
+  }
 
   const handleStartPlan = () => {
-    setCurrentView("dashboard");
-  };
+    setCurrentView("dashboard")
+  }
 
   const handleCustomizePlan = () => {
-    setCurrentView("customization");
-  };
+    setCurrentView("customization")
+  }
 
   const handleSaveCustomization = () => {
-    setCurrentView("dashboard");
-  };
+    setCurrentView("dashboard")
+  }
 
   const handleCancelCustomization = () => {
-    setCurrentView("detail");
-  };
+    setCurrentView("detail")
+  }
 
   const toggleStudyDay = (day: keyof typeof studyDays) => {
-    setStudyDays((prev) => ({ ...prev, [day]: !prev[day] }));
-  };
+    setStudyDays((prev) => ({ ...prev, [day]: !prev[day] }))
+  }
 
   const toggleNotificationPref = (pref: keyof typeof notificationPrefs) => {
-    setNotificationPrefs((prev) => ({ ...prev, [pref]: !prev[pref] }));
-  };
+    setNotificationPrefs((prev) => ({ ...prev, [pref]: !prev[pref] }))
+  }
 
   return (
-    <div className={`study-plan-system ${inter.className}`}>
-      <style jsx global>{`
-        :root {
-          --primary: #3b82f6;
-          --primary-dark: #2563eb;
-          --secondary: #10b981;
-          --secondary-dark: #059669;
-          --accent: #8b5cf6;
-          --light-bg: #f3f4f6;
-          --card-bg: #ffffff;
-          --text-primary: #1f2937;
-          --text-secondary: #6b7280;
-          --text-light: #9ca3af;
-          --border: #e5e7eb;
-          --danger: #ef4444;
-          --warning: #f59e0b;
-        }
-
-        .study-plan-system {
-          color: var(--text-primary);
-          background-color: var(--light-bg);
+    <div className={`turbo-study-plan-system ${inter.className}`}>
+      <style jsx>{`
+        .turbo-study-plan-system {
+          color: var(--turbo-text-primary);
+          background: radial-gradient(circle at top, #2A1569 0%, #121212 70%);
           line-height: 1.5;
           min-height: 100vh;
+          font-family: var(--font-inter);
         }
-
-        .container {
+        
+        .turbo-container {
           max-width: 1200px;
           margin: 0 auto;
           padding: 1rem;
         }
-
-        .navbar {
-          background-color: white;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        
+        .turbo-navbar {
+          background-color: rgba(20, 20, 20, 0.8);
+          backdrop-filter: blur(10px);
+          box-shadow: 0 2px 12px rgba(138, 43, 226, 0.2);
           padding: 1rem;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          border-bottom: 1px solid var(--turbo-border);
         }
-
-        .logo {
+        
+        .turbo-logo {
           font-size: 1.5rem;
           font-weight: 700;
-          color: var(--primary);
+          color: var(--turbo-primary);
           display: flex;
           align-items: center;
           gap: 0.5rem;
         }
-
-        .nav-links {
+        
+        .turbo-nav-links {
           display: flex;
           gap: 1.5rem;
         }
-
-        .nav-links a {
-          text-decoration: none;
-          color: var(--text-primary);
-          font-weight: 500;
-        }
-
-        .btn {
+        
+        .turbo-btn {
           padding: 0.75rem 1.5rem;
           border-radius: 0.5rem;
           font-weight: 600;
@@ -399,76 +377,95 @@ export default function StudyPlanSystem() {
           text-decoration: none;
           border: none;
         }
-
-        .btn-primary {
-          background-color: var(--primary);
+        
+        .turbo-btn-primary {
+          background: linear-gradient(135deg, var(--turbo-primary), var(--turbo-primary-dark));
           color: white;
+          box-shadow: 0 4px 14px rgba(138, 43, 226, 0.3);
         }
-
-        .btn-primary:hover {
-          background-color: var(--primary-dark);
+        
+        .turbo-btn-primary:hover {
+          background: linear-gradient(135deg, var(--turbo-primary-dark), var(--turbo-primary));
+          transform: translateY(-2px);
+          box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
         }
-
-        .btn-secondary {
-          background-color: var(--secondary);
-          color: white;
+        
+        .turbo-btn-outline {
+          border: 1px solid var(--turbo-border);
+          background-color: rgba(255, 255, 255, 0.05);
+          color: var(--turbo-text-primary);
         }
-
-        .btn-secondary:hover {
-          background-color: var(--secondary-dark);
+        
+        .turbo-btn-outline:hover {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-color: var(--turbo-primary);
         }
-
-        .btn-outline {
-          border: 1px solid var(--border);
-          background-color: transparent;
-          color: var(--text-primary);
-        }
-
-        .btn-outline:hover {
-          background-color: var(--light-bg);
-        }
-
-        .header {
+        
+        .turbo-header {
           text-align: center;
-          margin: 2rem 0;
+          margin: 3rem 0;
         }
-
-        .header h1 {
+        
+        .turbo-header h1 {
           font-size: 2.5rem;
           margin-bottom: 1rem;
+          background: linear-gradient(to right, #fff, #b195e4);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-weight: bold;
         }
-
-        .header p {
-          color: var(--text-secondary);
+        
+        .turbo-header p {
+          color: var(--turbo-text-secondary);
           max-width: 600px;
           margin: 0 auto;
         }
-
-        .grid {
+        
+        .turbo-grid {
           display: grid;
           grid-template-columns: repeat(3, 1fr);
           gap: 1.5rem;
         }
-
-        .card {
-          background-color: var(--card-bg);
+        
+        .turbo-card {
+          background: rgba(30, 30, 40, 0.6);
           border-radius: 1rem;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
           padding: 1.5rem;
-          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          border: 1px solid rgba(80, 80, 100, 0.2);
+          backdrop-filter: blur(10px);
+          position: relative;
+          overflow: hidden;
         }
-
-        .card:hover {
+        
+        .turbo-card::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 4px;
+          background: linear-gradient(90deg, var(--turbo-primary), var(--turbo-accent));
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+        
+        .turbo-card:hover {
           transform: translateY(-5px);
-          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 10px 25px rgba(138, 43, 226, 0.2);
         }
-
-        .card-icon {
+        
+        .turbo-card:hover::before {
+          opacity: 1;
+        }
+        
+        .turbo-card-icon {
           font-size: 2rem;
           margin-bottom: 1rem;
         }
-
-        .card-title {
+        
+        .turbo-card-title {
           font-size: 1.25rem;
           font-weight: 600;
           margin-bottom: 0.5rem;
@@ -476,345 +473,394 @@ export default function StudyPlanSystem() {
           align-items: center;
           gap: 0.5rem;
         }
-
-        .card-description {
-          color: var(--text-secondary);
+        
+        .turbo-card-description {
+          color: var(--turbo-text-secondary);
           margin-bottom: 1.5rem;
         }
-
-        .details-container {
+        
+        .turbo-details-container {
           display: flex;
           gap: 2rem;
           margin: 2rem 0;
         }
-
-        .details-sidebar {
+        
+        .turbo-details-sidebar {
           width: 30%;
         }
-
-        .details-content {
+        
+        .turbo-details-content {
           width: 70%;
         }
-
-        .plan-header {
+        
+        .turbo-plan-header {
           display: flex;
           align-items: center;
           gap: 1rem;
           margin-bottom: 2rem;
         }
-
-        .plan-header h2 {
+        
+        .turbo-plan-header h2 {
           font-size: 2rem;
           margin-bottom: 0;
+          background: linear-gradient(to right, #fff, #b195e4);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
-
-        .plan-emoji {
+        
+        .turbo-plan-emoji {
           font-size: 3rem;
+          filter: drop-shadow(0 0 10px rgba(138, 43, 226, 0.4));
         }
-
-        section {
+        
+        .turbo-section {
           margin-bottom: 2rem;
         }
-
-        section h3 {
+        
+        .turbo-section h3 {
           font-size: 1.5rem;
-          border-bottom: 2px solid var(--primary);
+          border-bottom: 2px solid var(--turbo-primary);
           padding-bottom: 0.5rem;
           margin-bottom: 1rem;
+          color: var(--turbo-text-primary);
         }
-
-        ul {
+        
+        .turbo-ul {
           list-style-type: none;
+          padding: 0;
+          margin: 0;
         }
-
-        ul li {
+        
+        .turbo-ul li {
           padding: 0.5rem 0;
           display: flex;
           align-items: center;
           gap: 0.5rem;
         }
-
-        ul li::before {
+        
+        .turbo-ul li::before {
           content: "•";
-          color: var(--primary);
+          color: var(--turbo-primary);
           font-weight: bold;
         }
-
-        .sample-week {
+        
+        .turbo-sample-week {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
           gap: 0.5rem;
         }
-
-        .day {
-          background-color: var(--light-bg);
+        
+        .turbo-day {
+          background-color: rgba(30, 30, 40, 0.6);
+          border: 1px solid rgba(80, 80, 100, 0.2);
           border-radius: 0.5rem;
           padding: 1rem;
         }
-
-        .day-header {
+        
+        .turbo-day-header {
           font-weight: 600;
           margin-bottom: 0.5rem;
           text-align: center;
+          color: var(--turbo-text-primary);
         }
-
-        .task {
+        
+        .turbo-task {
           padding: 0.5rem;
-          background-color: white;
+          background-color: rgba(20, 20, 30, 0.8);
           border-radius: 0.25rem;
           font-size: 0.875rem;
           margin-bottom: 0.5rem;
+          border-left: 3px solid transparent;
         }
-
-        .task.reading {
-          border-left: 3px solid var(--primary);
+        
+        .turbo-task.reading {
+          border-left: 3px solid var(--turbo-primary);
         }
-
-        .task.math {
-          border-left: 3px solid var(--secondary);
+        
+        .turbo-task.math {
+          border-left: 3px solid var(--turbo-secondary);
         }
-
-        .task.writing {
-          border-left: 3px solid var(--accent);
+        
+        .turbo-task.writing {
+          border-left: 3px solid var(--turbo-accent);
         }
-
-        .dashboard {
+        
+        .turbo-dashboard {
           display: flex;
           gap: 2rem;
         }
-
-        .dashboard-sidebar {
+        
+        .turbo-dashboard-sidebar {
           width: 20%;
-          background-color: white;
+          background-color: rgba(30, 30, 40, 0.6);
+          border: 1px solid rgba(80, 80, 100, 0.2);
           border-radius: 1rem;
           padding: 1.5rem;
           height: fit-content;
         }
-
-        .dashboard-content {
+        
+        .turbo-dashboard-content {
           width: 80%;
         }
-
-        .sidebar-nav {
+        
+        .turbo-sidebar-nav {
           display: flex;
           flex-direction: column;
-          gap: 1rem;
+          gap: 0.5rem;
         }
-
-        .sidebar-nav a {
+        
+        .turbo-sidebar-nav a {
           text-decoration: none;
-          color: var(--text-secondary);
+          color: var(--turbo-text-secondary);
           padding: 0.75rem;
           border-radius: 0.5rem;
           font-weight: 500;
           transition: background-color 0.2s ease;
         }
-
-        .sidebar-nav a:hover {
-          background-color: var(--light-bg);
+        
+        .turbo-sidebar-nav a:hover {
+          background-color: rgba(80, 80, 100, 0.2);
+          color: var(--turbo-text-primary);
         }
-
-        .sidebar-nav a.active {
-          background-color: var(--primary);
+        
+        .turbo-sidebar-nav a.active {
+          background: linear-gradient(135deg, var(--turbo-primary), var(--turbo-primary-dark));
           color: white;
         }
-
-        .welcome-header {
+        
+        .turbo-welcome-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 2rem;
         }
-
-        .calendar {
-          background-color: white;
+        
+        .turbo-calendar {
+          background-color: rgba(30, 30, 40, 0.6);
+          border: 1px solid rgba(80, 80, 100, 0.2);
           border-radius: 1rem;
           padding: 1.5rem;
           margin-bottom: 2rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
-
-        .calendar-header {
+        
+        .turbo-calendar-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
           margin-bottom: 1rem;
         }
-
-        .calendar-navigation {
+        
+        .turbo-calendar-navigation {
           display: flex;
           gap: 0.5rem;
         }
-
-        .week-view {
+        
+        .turbo-week-view {
           display: grid;
           grid-template-columns: repeat(7, 1fr);
           gap: 1rem;
         }
-
-        .week-day {
-          border: 1px solid var(--border);
+        
+        .turbo-week-day {
+          border: 1px solid rgba(80, 80, 100, 0.2);
           border-radius: 0.5rem;
           padding: 1rem;
           min-height: 200px;
+          background-color: rgba(20, 20, 30, 0.5);
         }
-
-        .week-day-header {
+        
+        .turbo-week-day-header {
           text-align: center;
           padding-bottom: 0.5rem;
           margin-bottom: 0.5rem;
-          border-bottom: 1px solid var(--border);
+          border-bottom: 1px solid rgba(80, 80, 100, 0.2);
           font-weight: 600;
+          color: var(--turbo-text-primary);
         }
-
-        .calendar-task {
-          background-color: var(--light-bg);
+        
+        .turbo-calendar-task {
+          background-color: rgba(40, 40, 50, 0.8);
           border-radius: 0.5rem;
           padding: 0.75rem;
           margin-bottom: 0.5rem;
           font-size: 0.875rem;
           cursor: pointer;
-          transition: background-color 0.2s ease;
+          transition: background-color 0.2s ease, transform 0.2s ease;
+          border-left: 3px solid transparent;
         }
-
-        .calendar-task:hover {
-          background-color: rgba(59, 130, 246, 0.1);
+        
+        .turbo-calendar-task:hover {
+          background-color: rgba(60, 60, 70, 0.8);
+          transform: translateY(-2px);
         }
-
-        .calendar-task.reading {
-          border-left: 3px solid var(--primary);
+        
+        .turbo-calendar-task.reading {
+          border-left: 3px solid var(--turbo-primary);
         }
-
-        .calendar-task.math {
-          border-left: 3px solid var(--secondary);
+        
+        .turbo-calendar-task.math {
+          border-left: 3px solid var(--turbo-secondary);
         }
-
-        .calendar-task.writing {
-          border-left: 3px solid var(--accent);
+        
+        .turbo-calendar-task.writing {
+          border-left: 3px solid var(--turbo-accent);
         }
-
-        .progress-summary {
+        
+        .turbo-progress-summary {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
           gap: 1.5rem;
         }
-
-        .progress-card {
-          background-color: white;
+        
+        .turbo-progress-card {
+          background-color: rgba(30, 30, 40, 0.6);
+          border: 1px solid rgba(80, 80, 100, 0.2);
           border-radius: 1rem;
           padding: 1.5rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
-
-        .progress-bar-container {
-          height: 1rem;
-          background-color: var(--light-bg);
-          border-radius: 0.5rem;
+        
+        .turbo-progress-bar-container {
+          height: 0.75rem;
+          background-color: rgba(80, 80, 100, 0.2);
+          border-radius: 1rem;
           overflow: hidden;
           margin: 0.5rem 0 1rem;
         }
-
-        .progress-bar {
+        
+        .turbo-progress-bar {
           height: 100%;
-          background-color: var(--primary);
+          background: linear-gradient(90deg, var(--turbo-primary), var(--turbo-primary-light));
           width: 65%;
+          border-radius: 1rem;
         }
-
-        .progress-bar.reading {
-          background-color: var(--primary);
+        
+        .turbo-progress-bar.reading {
+          background: linear-gradient(90deg, var(--turbo-primary), var(--turbo-primary-light));
           width: 75%;
         }
-
-        .progress-bar.math {
-          background-color: var(--secondary);
+        
+        .turbo-progress-bar.math {
+          background: linear-gradient(90deg, var(--turbo-secondary), var(--turbo-secondary-light));
           width: 45%;
         }
-
-        .progress-bar.writing {
-          background-color: var(--accent);
+        
+        .turbo-progress-bar.writing {
+          background: linear-gradient(90deg, var(--turbo-accent), var(--turbo-accent-light));
           width: 60%;
         }
-
-        .motivational-card {
-          background-color: var(--accent);
+        
+        .turbo-motivational-card {
+          background: linear-gradient(135deg, var(--turbo-accent), var(--turbo-primary-dark));
           color: white;
           border-radius: 1rem;
-          padding: 1.5rem;
+          padding: 2rem 1.5rem;
           display: flex;
           flex-direction: column;
           justify-content: center;
           align-items: center;
           text-align: center;
+          box-shadow: 0 4px 20px rgba(138, 43, 226, 0.3);
+          position: relative;
+          overflow: hidden;
         }
-
-        .motivational-card h3 {
+        
+        .turbo-motivational-card::before {
+          content: "";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fillOpacity='0.1' fillRule='evenodd'/%3E%3C/svg%3E");
+          opacity: 0.2;
+        }
+        
+        .turbo-motivational-card h3 {
           font-size: 1.75rem;
           margin-bottom: 1rem;
           border: none;
+          color: white;
         }
-
-        .motivational-card p {
+        
+        .turbo-motivational-card p {
           font-style: italic;
+          color: rgba(255, 255, 255, 0.9);
         }
-
-        .customization-form {
-          background-color: white;
+        
+        .turbo-customization-form {
+          background-color: rgba(30, 30, 40, 0.6);
+          border: 1px solid rgba(80, 80, 100, 0.2);
           border-radius: 1rem;
           padding: 1.5rem;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
-
-        .form-group {
+        
+        .turbo-form-group {
           margin-bottom: 1.5rem;
         }
-
-        .form-group label {
+        
+        .turbo-form-group label {
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
+          color: var(--turbo-text-primary);
         }
-
-        .form-group input,
-        .form-group select {
+        
+        .turbo-form-group input,
+        .turbo-form-group select {
           width: 100%;
           padding: 0.75rem;
-          border: 1px solid var(--border);
+          border: 1px solid rgba(80, 80, 100, 0.3);
           border-radius: 0.5rem;
+          background-color: rgba(20, 20, 30, 0.6);
+          color: var(--turbo-text-primary);
         }
-
-        .checkbox-group {
+        
+        .turbo-form-group input:focus,
+        .turbo-form-group select:focus {
+          border-color: var(--turbo-primary);
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.2);
+        }
+        
+        .turbo-checkbox-group {
           display: flex;
           align-items: center;
           gap: 0.5rem;
         }
-
-        .checkbox-group input {
+        
+        .turbo-checkbox-group input {
           width: auto;
         }
-
-        .toggle-switch {
+        
+        .turbo-toggle-switch {
           position: relative;
           display: inline-block;
           width: 60px;
           height: 34px;
         }
-
-        .toggle-switch input {
+        
+        .turbo-toggle-switch input {
           opacity: 0;
           width: 0;
           height: 0;
         }
-
-        .toggle-slider {
+        
+        .turbo-toggle-slider {
           position: absolute;
           cursor: pointer;
           top: 0;
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: var(--light-bg);
+          background-color: rgba(80, 80, 100, 0.2);
           transition: 0.4s;
           border-radius: 34px;
         }
-
-        .toggle-slider:before {
+        
+        .turbo-toggle-slider:before {
           position: absolute;
           content: "";
           height: 26px;
@@ -825,542 +871,512 @@ export default function StudyPlanSystem() {
           transition: 0.4s;
           border-radius: 50%;
         }
-
-        input:checked + .toggle-slider {
-          background-color: var(--primary);
+        
+        input:checked + .turbo-toggle-slider {
+          background: linear-gradient(135deg, var(--turbo-primary), var(--turbo-primary-dark));
         }
-
-        input:checked + .toggle-slider:before {
+        
+        input:checked + .turbo-toggle-slider:before {
           transform: translateX(26px);
         }
-
+        
         @media (max-width: 1024px) {
-          .grid {
+          .turbo-grid {
             grid-template-columns: repeat(2, 1fr);
           }
-
-          .dashboard {
+          
+          .turbo-dashboard {
             flex-direction: column;
           }
-
-          .dashboard-sidebar {
+          
+          .turbo-dashboard-sidebar {
             width: 100%;
             margin-bottom: 1.5rem;
           }
-
-          .dashboard-content {
+          
+          .turbo-dashboard-content {
             width: 100%;
           }
-
-          .sidebar-nav {
+          
+          .turbo-sidebar-nav {
             flex-direction: row;
             overflow-x: auto;
             padding-bottom: 0.5rem;
           }
         }
-
+        
         @media (max-width: 768px) {
-          .grid {
+          .turbo-grid {
             grid-template-columns: 1fr;
           }
-
-          .details-container {
+          
+          .turbo-details-container {
             flex-direction: column;
           }
-
-          .details-sidebar,
-          .details-content {
+          
+          .turbo-details-sidebar,
+          .turbo-details-content {
             width: 100%;
           }
-
-          .sample-week {
+          
+          .turbo-sample-week {
             grid-template-columns: repeat(3, 1fr);
           }
-
-          .week-view {
+          
+          .turbo-week-view {
             grid-template-columns: 1fr;
           }
-
-          .progress-summary {
+          
+          .turbo-progress-summary {
             grid-template-columns: 1fr;
           }
         }
       `}</style>
 
-      <nav className="navbar">
-        <div className="logo">
-          <span>📚</span> SAT Study Planner
-        </div>
-        <div className="nav-links">
-          <button
-            className="btn btn-outline"
-            onClick={() => setCurrentView("selection")}
-          >
-            Home
-          </button>
-          <button
-            className="btn btn-outline"
-            onClick={() => setCurrentView("dashboard")}
-          >
-            Dashboard
-          </button>
-          <button className="btn btn-primary">Login</button>
-        </div>
-      </nav>
+      {/* Global styles to avoid conflicts */}
+      <style jsx global>{`
+        :root {
+          --turbo-primary: #8A2BE2;
+          --turbo-primary-dark: #6A1CB0;
+          --turbo-primary-light: #B768FF;
+          --turbo-secondary: #00E676;
+          --turbo-secondary-dark: #00B248;
+          --turbo-secondary-light: #66FFA6;
+          --turbo-accent: #FF4081;
+          --turbo-accent-light: #FF80AB;
+          --turbo-dark-bg: #121212;
+          --turbo-card-bg: rgba(30, 30, 40, 0.6);
+          --turbo-text-primary: #FFFFFF;
+          --turbo-text-secondary: #B0B0C0;
+          --turbo-text-light: #8080A0;
+          --turbo-border: rgba(80, 80, 100, 0.2);
+          --turbo-danger: #FF5252;
+          --turbo-warning: #FFD740;
+          --font-inter: 'Inter', sans-serif;
+        }
+      `}</style>
 
-      {currentView === "selection" && (
-        <section>
-          <div className="container">
-            <div className="header">
-              <h1>Choose Your SAT Study Plan</h1>
-              <p>
-                Select from our expert-designed study plans tailored to your
-                schedule and learning style
-              </p>
-            </div>
-
-            <div className="grid">
-              {plansData.map((plan) => (
-                <div
-                  key={plan.id}
-                  className="card"
-                  onClick={() => handlePlanSelect(plan)}
-                >
-                  <div className="card-title">
-                    <span className="card-icon">{plan.emoji}</span>
-                    {plan.title}
-                  </div>
-                  <div className="card-description">{plan.description}</div>
-                  <button className="btn btn-primary">View Plan</button>
-                </div>
-              ))}
-            </div>
+      <div className="turbo-background-image">
+        <nav className="turbo-navbar">
+          <div className="turbo-logo">
+            <span>📚</span> SAT Study Planner
           </div>
-        </section>
-      )}
+          <div className="turbo-nav-links">
+            <button className="turbo-btn turbo-btn-outline" onClick={() => setCurrentView("selection")}>
+              Home
+            </button>
+            <button className="turbo-btn turbo-btn-outline" onClick={() => setCurrentView("dashboard")}>
+              Dashboard
+            </button>
+            <button className="turbo-btn turbo-btn-primary">Login</button>
+          </div>
+        </nav>
 
-      {currentView === "detail" && selectedPlan && (
-        <section>
-          <div className="container">
-            <div className="plan-header">
-              <span className="plan-emoji">{selectedPlan.emoji}</span>
-              <h2>{selectedPlan.title}</h2>
+        {currentView === "selection" && (
+          <section>
+            <div className="turbo-container">
+              <div className="turbo-header">
+                <h1>Choose Your SAT Study Plan</h1>
+                <p>Select from our expert-designed study plans tailored to your schedule and learning style</p>
+              </div>
+
+              <div className="turbo-grid">
+                {plansData.map((plan) => (
+                  <div key={plan.id} className="turbo-card" onClick={() => handlePlanSelect(plan)}>
+                    <div className="turbo-card-title">
+                      <span className="turbo-card-icon">{plan.emoji}</span>
+                      {plan.title}
+                    </div>
+                    <div className="turbo-card-description">{plan.description}</div>
+                    <button className="turbo-btn turbo-btn-primary">View Plan</button>
+                  </div>
+                ))}
+              </div>
             </div>
+          </section>
+        )}
 
-            <div className="details-container">
-              <div className="details-sidebar">
-                <div className="card">
-                  <h3>Plan Summary</h3>
-                  <ul>
-                    <li>Duration: {selectedPlan.duration}</li>
-                    <li>Intensity: {selectedPlan.intensity}</li>
-                    <li>Mock Tests: {selectedPlan.mockTests}</li>
-                    <li>Daily Study: {selectedPlan.dailyStudy}</li>
-                  </ul>
+        {currentView === "detail" && selectedPlan && (
+          <section>
+            <div className="turbo-container">
+              <div className="turbo-plan-header">
+                <span className="turbo-plan-emoji">{selectedPlan.emoji}</span>
+                <h2>{selectedPlan.title}</h2>
+              </div>
 
-                  <div style={{ marginTop: "2rem" }}>
-                    <label
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
-                      }}
-                    >
-                      <span>Enable Notifications</span>
-                      <label className="toggle-switch">
-                        <input
-                          type="checkbox"
-                          checked={notificationsEnabled}
-                          onChange={() =>
-                            setNotificationsEnabled(!notificationsEnabled)
-                          }
-                        />
-                        <span className="toggle-slider"></span>
+              <div className="turbo-details-container">
+                <div className="turbo-details-sidebar">
+                  <div className="turbo-card">
+                    <h3>Plan Summary</h3>
+                    <ul className="turbo-ul">
+                      <li>Duration: {selectedPlan.duration}</li>
+                      <li>Intensity: {selectedPlan.intensity}</li>
+                      <li>Mock Tests: {selectedPlan.mockTests}</li>
+                      <li>Daily Study: {selectedPlan.dailyStudy}</li>
+                    </ul>
+
+                    <div style={{ marginTop: "2rem" }}>
+                      <label
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "0.5rem",
+                        }}
+                      >
+                        <span>Enable Notifications</span>
+                        <label className="turbo-toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={notificationsEnabled}
+                            onChange={() => setNotificationsEnabled(!notificationsEnabled)}
+                          />
+                          <span className="turbo-toggle-slider"></span>
+                        </label>
                       </label>
-                    </label>
-                  </div>
-
-                  <div style={{ marginTop: "2rem" }}>
-                    <button
-                      className="btn btn-primary"
-                      style={{ width: "100%" }}
-                      onClick={handleStartPlan}
-                    >
-                      Start This Plan
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="details-content">
-                <section>
-                  <h3>Who is this for?</h3>
-                  <p>
-                    The {selectedPlan.title} is perfect for students who have{" "}
-                    {selectedPlan.description.toLowerCase()}. This{" "}
-                    {selectedPlan.duration} plan is designed for those who need
-                    to maximize their preparation in minimal time, focusing on
-                    high-impact strategies and targeted practice.
-                  </p>
-                </section>
-
-                <section>
-                  <h3>Plan Highlights</h3>
-                  <ul>
-                    <li>Daily study sessions ({selectedPlan.dailyStudy})</li>
-                    <li>{selectedPlan.mockTests} full-length mock tests</li>
-                    <li>
-                      Strategic content review focused on high-frequency topics
-                    </li>
-                    <li>
-                      Daily practice sets targeting all three test sections
-                    </li>
-                    <li>Emphasis on error analysis and mistake prevention</li>
-                    <li>Test-day strategies and time management techniques</li>
-                  </ul>
-                </section>
-
-                <section>
-                  <h3>Sample Week View</h3>
-                  <div className="sample-week">
-                    {sampleWeek.map((day) => (
-                      <div key={day.name} className="day">
-                        <div className="day-header">{day.name}</div>
-                        {day.tasks.map((task) => (
-                          <div
-                            key={task.id}
-                            className={`task ${task.type || ""}`}
-                          >
-                            {task.title} ({task.duration})
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                </section>
-
-                <section style={{ marginTop: "2rem" }}>
-                  <button
-                    className="btn btn-outline"
-                    onClick={handleCustomizePlan}
-                  >
-                    Customize This Plan
-                  </button>
-                </section>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {currentView === "dashboard" && (
-        <section>
-          <div className="container">
-            <div className="welcome-header">
-              <h2>Welcome, Alex</h2>
-              <div>
-                <span>{selectedPlan?.title || "Fast Track Plan"}</span>
-                <button
-                  className="btn btn-outline"
-                  onClick={() => setCurrentView("selection")}
-                >
-                  Change Plan
-                </button>
-              </div>
-            </div>
-
-            <div className="dashboard">
-              <div className="dashboard-sidebar">
-                <div className="sidebar-nav">
-                  <a href="#" className="active">
-                    Calendar
-                  </a>
-                  <a href="#">Progress</a>
-                  <a href="#">Settings</a>
-                </div>
-              </div>
-
-              <div className="dashboard-content">
-                <div className="calendar">
-                  <div className="calendar-header">
-                    <h3>This Week's Schedule</h3>
-                    <div className="calendar-navigation">
-                      <button className="btn btn-outline">Previous</button>
-                      <button className="btn btn-outline">Next</button>
                     </div>
-                  </div>
 
-                  <div className="week-view">
-                    {weekViewTasks.map((day) => (
-                      <div key={day.day} className="week-day">
-                        <div className="week-day-header">{day.day}</div>
-                        {day.tasks.map((task) => (
-                          <div
-                            key={task.id}
-                            className={`calendar-task ${task.type || ""}`}
-                          >
-                            {task.title} ({task.duration})
-                          </div>
-                        ))}
-                      </div>
-                    ))}
+                    <div style={{ marginTop: "2rem" }}>
+                      <button
+                        className="turbo-btn turbo-btn-primary"
+                        style={{ width: "100%" }}
+                        onClick={handleStartPlan}
+                      >
+                        Start This Plan
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="progress-summary">
-                  <div className="progress-card">
-                    <h3>Overall Progress</h3>
-                    <div className="progress-bar-container">
-                      <div className="progress-bar"></div>
-                    </div>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <span>65% Complete</span>
-                      <span>15 of 23 tasks</span>
-                    </div>
-
-                    <div style={{ marginTop: "1.5rem" }}>
-                      <h4>Section Progress</h4>
-
-                      <div style={{ marginTop: "1rem" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <span>Reading</span>
-                          <span>75%</span>
-                        </div>
-                        <div className="progress-bar-container">
-                          <div className="progress-bar reading"></div>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: "1rem" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <span>Math</span>
-                          <span>45%</span>
-                        </div>
-                        <div className="progress-bar-container">
-                          <div className="progress-bar math"></div>
-                        </div>
-                      </div>
-
-                      <div style={{ marginTop: "1rem" }}>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <span>Writing</span>
-                          <span>60%</span>
-                        </div>
-                        <div className="progress-bar-container">
-                          <div className="progress-bar writing"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="motivational-card">
-                    <h3>Keep it up!</h3>
+                <div className="turbo-details-content">
+                  <section className="turbo-section">
+                    <h3>Who is this for?</h3>
                     <p>
-                      "Success is the sum of small efforts, repeated day in and
-                      day out."
+                      The {selectedPlan.title} is perfect for students who have {selectedPlan.description.toLowerCase()}
+                      . This {selectedPlan.duration} plan is designed for those who need to maximize their preparation
+                      in minimal time, focusing on high-impact strategies and targeted practice.
                     </p>
+                  </section>
+
+                  <section className="turbo-section">
+                    <h3>Plan Highlights</h3>
+                    <ul className="turbo-ul">
+                      <li>Daily study sessions ({selectedPlan.dailyStudy})</li>
+                      <li>{selectedPlan.mockTests} full-length mock tests</li>
+                      <li>Strategic content review focused on high-frequency topics</li>
+                      <li>Daily practice sets targeting all three test sections</li>
+                      <li>Emphasis on error analysis and mistake prevention</li>
+                      <li>Test-day strategies and time management techniques</li>
+                    </ul>
+                  </section>
+
+                  <section className="turbo-section">
+                    <h3>Sample Week View</h3>
+                    <div className="turbo-sample-week">
+                      {sampleWeek.map((day) => (
+                        <div key={day.name} className="turbo-day">
+                          <div className="turbo-day-header">{day.name}</div>
+                          {day.tasks.map((task) => (
+                            <div key={task.id} className={`turbo-task ${task.type || ""}`}>
+                              {task.title} ({task.duration})
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  <section style={{ marginTop: "2rem" }}>
+                    <button className="turbo-btn turbo-btn-outline" onClick={handleCustomizePlan}>
+                      Customize This Plan
+                    </button>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {currentView === "dashboard" && (
+          <section>
+            <div className="turbo-container">
+              <div className="turbo-welcome-header">
+                <h2>Welcome, Alex</h2>
+                <div>
+                  <span>{selectedPlan?.title || "Fast Track Plan"}</span>
+                  <button className="turbo-btn turbo-btn-outline" onClick={() => setCurrentView("selection")}>
+                    Change Plan
+                  </button>
+                </div>
+              </div>
+
+              <div className="turbo-dashboard">
+                <div className="turbo-dashboard-sidebar">
+                  <div className="turbo-sidebar-nav">
+                    <a href="#" className="active">
+                      Calendar
+                    </a>
+                    <a href="#">Progress</a>
+                    <a href="#">Settings</a>
+                  </div>
+                </div>
+
+                <div className="turbo-dashboard-content">
+                  <div className="turbo-calendar">
+                    <div className="turbo-calendar-header">
+                      <h3>This Week's Schedule</h3>
+                      <div className="turbo-calendar-navigation">
+                        <button className="turbo-btn turbo-btn-outline">Previous</button>
+                        <button className="turbo-btn turbo-btn-outline">Next</button>
+                      </div>
+                    </div>
+
+                    <div className="turbo-week-view">
+                      {sampleWeek.map((day) => (
+                        <div key={day.name} className="turbo-week-day">
+                          <div className="turbo-week-day-header">{day.name}</div>
+                          {day.tasks.map((task) => (
+                            <div key={task.id} className={`turbo-calendar-task ${task.type || ""}`}>
+                              {task.title} ({task.duration})
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="turbo-progress-summary">
+                    <div className="turbo-progress-card">
+                      <h3>Overall Progress</h3>
+                      <div className="turbo-progress-bar-container">
+                        <div className="turbo-progress-bar"></div>
+                      </div>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <span>65% Complete</span>
+                        <span>15 of 23 tasks</span>
+                      </div>
+
+                      <div style={{ marginTop: "1.5rem" }}>
+                        <h4>Section Progress</h4>
+
+                        <div style={{ marginTop: "1rem" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <span>Reading</span>
+                            <span>75%</span>
+                          </div>
+                          <div className="turbo-progress-bar-container">
+                            <div className="turbo-progress-bar reading"></div>
+                          </div>
+                        </div>
+
+                        <div style={{ marginTop: "1rem" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <span>Math</span>
+                            <span>45%</span>
+                          </div>
+                          <div className="turbo-progress-bar-container">
+                            <div className="turbo-progress-bar math"></div>
+                          </div>
+                        </div>
+
+                        <div style={{ marginTop: "1rem" }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <span>Writing</span>
+                            <span>60%</span>
+                          </div>
+                          <div className="turbo-progress-bar-container">
+                            <div className="turbo-progress-bar writing"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="turbo-motivational-card">
+                      <h3>Keep it up!</h3>
+                      <p>"Success is the sum of small efforts, repeated day in and day out."</p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
 
-      {currentView === "customization" && (
-        <section>
-          <div className="container">
-            <h2>Customize Your Plan</h2>
-            <p>
-              Adjust the {selectedPlan?.title || "Fast Track Plan"} to better
-              fit your schedule and learning needs
-            </p>
+        {currentView === "customization" && (
+          <section>
+            <div className="turbo-container">
+              <h2>Customize Your Plan</h2>
+              <p>
+                Adjust the {selectedPlan?.title || "Fast Track Plan"} to better fit your schedule and learning needs
+              </p>
 
-            <div className="customization-form">
-              <div className="form-group">
-                <label>Available study time per day</label>
-                <select
-                  value={studyTime}
-                  onChange={(e) => setStudyTime(e.target.value)}
-                >
-                  <option>1-2 hours</option>
-                  <option>3-4 hours</option>
-                  <option>5+ hours</option>
-                </select>
-              </div>
+              <div className="turbo-customization-form">
+                <div className="turbo-form-group">
+                  <label>Available study time per day</label>
+                  <select value={studyTime} onChange={(e) => setStudyTime(e.target.value)}>
+                    <option>1-2 hours</option>
+                    <option>3-4 hours</option>
+                    <option>5+ hours</option>
+                  </select>
+                </div>
 
-              <div className="form-group">
-                <label>Preferred focus area</label>
-                <select
-                  value={focusArea}
-                  onChange={(e) => setFocusArea(e.target.value)}
-                >
-                  <option>Balanced</option>
-                  <option>More Reading</option>
-                  <option>More Math</option>
-                  <option>More Writing</option>
-                </select>
-              </div>
+                <div className="turbo-form-group">
+                  <label>Preferred focus area</label>
+                  <select value={focusArea} onChange={(e) => setFocusArea(e.target.value)}>
+                    <option>Balanced</option>
+                    <option>More Reading</option>
+                    <option>More Math</option>
+                    <option>More Writing</option>
+                  </select>
+                </div>
 
-              <div className="form-group">
-                <label>Number of practice tests</label>
-                <select
-                  value={practiceTests}
-                  onChange={(e) => setPracticeTests(e.target.value)}
-                >
-                  <option>1 per week</option>
-                  <option>2 per week</option>
-                  <option>3 per week</option>
-                </select>
-              </div>
+                <div className="turbo-form-group">
+                  <label>Number of practice tests</label>
+                  <select value={practiceTests} onChange={(e) => setPracticeTests(e.target.value)}>
+                    <option>1 per week</option>
+                    <option>2 per week</option>
+                    <option>3 per week</option>
+                  </select>
+                </div>
 
-              <div className="form-group">
-                <label>Preferred study days</label>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(4, 1fr)",
-                    gap: "1rem",
-                  }}
-                >
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="monday"
-                      checked={studyDays.monday}
-                      onChange={() => toggleStudyDay("monday")}
-                    />
-                    <label htmlFor="monday">Monday</label>
-                  </div>
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="tuesday"
-                      checked={studyDays.tuesday}
-                      onChange={() => toggleStudyDay("tuesday")}
-                    />
-                    <label htmlFor="tuesday">Tuesday</label>
-                  </div>
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="wednesday"
-                      checked={studyDays.wednesday}
-                      onChange={() => toggleStudyDay("wednesday")}
-                    />
-                    <label htmlFor="wednesday">Wednesday</label>
-                  </div>
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="thursday"
-                      checked={studyDays.thursday}
-                      onChange={() => toggleStudyDay("thursday")}
-                    />
-                    <label htmlFor="thursday">Thursday</label>
-                  </div>
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="friday"
-                      checked={studyDays.friday}
-                      onChange={() => toggleStudyDay("friday")}
-                    />
-                    <label htmlFor="friday">Friday</label>
-                  </div>
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="saturday"
-                      checked={studyDays.saturday}
-                      onChange={() => toggleStudyDay("saturday")}
-                    />
-                    <label htmlFor="saturday">Saturday</label>
-                  </div>
-                  <div className="checkbox-group">
-                    <input
-                      type="checkbox"
-                      id="sunday"
-                      checked={studyDays.sunday}
-                      onChange={() => toggleStudyDay("sunday")}
-                    />
-                    <label htmlFor="sunday">Sunday</label>
+                <div className="turbo-form-group">
+                  <label>Preferred study days</label>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, 1fr)",
+                      gap: "1rem",
+                    }}
+                  >
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="monday"
+                        checked={studyDays.monday}
+                        onChange={() => toggleStudyDay("monday")}
+                      />
+                      <label htmlFor="monday">Monday</label>
+                    </div>
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="tuesday"
+                        checked={studyDays.tuesday}
+                        onChange={() => toggleStudyDay("tuesday")}
+                      />
+                      <label htmlFor="tuesday">Tuesday</label>
+                    </div>
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="wednesday"
+                        checked={studyDays.wednesday}
+                        onChange={() => toggleStudyDay("wednesday")}
+                      />
+                      <label htmlFor="wednesday">Wednesday</label>
+                    </div>
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="thursday"
+                        checked={studyDays.thursday}
+                        onChange={() => toggleStudyDay("thursday")}
+                      />
+                      <label htmlFor="thursday">Thursday</label>
+                    </div>
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="friday"
+                        checked={studyDays.friday}
+                        onChange={() => toggleStudyDay("friday")}
+                      />
+                      <label htmlFor="friday">Friday</label>
+                    </div>
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="saturday"
+                        checked={studyDays.saturday}
+                        onChange={() => toggleStudyDay("saturday")}
+                      />
+                      <label htmlFor="saturday">Saturday</label>
+                    </div>
+                    <div className="turbo-checkbox-group">
+                      <input
+                        type="checkbox"
+                        id="sunday"
+                        checked={studyDays.sunday}
+                        onChange={() => toggleStudyDay("sunday")}
+                      />
+                      <label htmlFor="sunday">Sunday</label>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="form-group">
-                <label>Notification preferences</label>
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    id="daily-reminders"
-                    checked={notificationPrefs.dailyReminders}
-                    onChange={() => toggleNotificationPref("dailyReminders")}
-                  />
-                  <label htmlFor="daily-reminders">Daily study reminders</label>
+                <div className="turbo-form-group">
+                  <label>Notification preferences</label>
+                  <div className="turbo-checkbox-group">
+                    <input
+                      type="checkbox"
+                      id="daily-reminders"
+                      checked={notificationPrefs.dailyReminders}
+                      onChange={() => toggleNotificationPref("dailyReminders")}
+                    />
+                    <label htmlFor="daily-reminders">Daily study reminders</label>
+                  </div>
+                  <div className="turbo-checkbox-group">
+                    <input
+                      type="checkbox"
+                      id="progress-updates"
+                      checked={notificationPrefs.progressUpdates}
+                      onChange={() => toggleNotificationPref("progressUpdates")}
+                    />
+                    <label htmlFor="progress-updates">Weekly progress updates</label>
+                  </div>
+                  <div className="turbo-checkbox-group">
+                    <input
+                      type="checkbox"
+                      id="test-reminders"
+                      checked={notificationPrefs.testReminders}
+                      onChange={() => toggleNotificationPref("testReminders")}
+                    />
+                    <label htmlFor="test-reminders">Mock test reminders</label>
+                  </div>
                 </div>
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    id="progress-updates"
-                    checked={notificationPrefs.progressUpdates}
-                    onChange={() => toggleNotificationPref("progressUpdates")}
-                  />
-                  <label htmlFor="progress-updates">
-                    Weekly progress updates
-                  </label>
-                </div>
-                <div className="checkbox-group">
-                  <input
-                    type="checkbox"
-                    id="test-reminders"
-                    checked={notificationPrefs.testReminders}
-                    onChange={() => toggleNotificationPref("testReminders")}
-                  />
-                  <label htmlFor="test-reminders">Mock test reminders</label>
-                </div>
-              </div>
 
-              <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
-                <button
-                  className="btn btn-primary"
-                  onClick={handleSaveCustomization}
-                >
-                  Save & Apply
-                </button>
-                <button
-                  className="btn btn-outline"
-                  onClick={handleCancelCustomization}
-                >
-                  Cancel
-                </button>
+                <div style={{ marginTop: "2rem", display: "flex", gap: "1rem" }}>
+                  <button className="turbo-btn turbo-btn-primary" onClick={handleSaveCustomization}>
+                    Save & Apply
+                  </button>
+                  <button className="turbo-btn turbo-btn-outline" onClick={handleCancelCustomization}>
+                    Cancel
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
+      </div>
     </div>
-  );
+  )
 }
-  

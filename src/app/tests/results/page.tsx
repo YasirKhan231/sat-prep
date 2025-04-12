@@ -1,13 +1,34 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
+// Wrap the main component in Suspense to handle dynamic data
 export default function TestResultsPage() {
+  return (
+    <Suspense
+      fallback={<div className="text-center py-8">Loading results...</div>}
+    >
+      <ResultsContent />
+    </Suspense>
+  );
+}
+
+// Extract the logic into a separate component
+function ResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const testId = searchParams.get("testId");
 
-  // Mock results data
+  if (!testId) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        Error: Test ID not found in URL
+      </div>
+    );
+  }
+
+  // Mock results data (replace with real data fetching)
   const scorePercentage = 82;
   const correctAnswers = 16;
   const totalQuestions = 20;

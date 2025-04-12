@@ -12,14 +12,16 @@ export default function TestimonialCard({
   quote,
 }: TestimonialCardProps) {
   return (
-    <div className="bg-[var(--bg-tertiary)] rounded-2xl p-8 flex items-center gap-6">
-      <div className="w-20 h-20 rounded-full bg-[var(--accent)] flex items-center justify-center text-white font-bold text-2xl">
-        {initials}
-      </div>
-      <div>
-        <p className="mb-4 italic">"{quote}"</p>
-        <h4 className="font-bold text-[var(--accent)]">{name}</h4>
-        <p>{role}</p>
+    <div className="testimonial-card">
+      <div className="flex items-start gap-6">
+        <div className="avatar-circle w-16 h-16 bg-gradient-to-r from-[hsl(var(--gradient-start))] to-[hsl(var(--gradient-end))] text-white font-bold text-xl flex-shrink-0">
+          {initials}
+        </div>
+        <div>
+          <p className="mb-4 italic text-muted-foreground">"{quote}"</p>
+          <h4 className="font-bold gradient-text">{name}</h4>
+          <p className="text-muted-foreground text-sm">{role}</p>
+        </div>
       </div>
     </div>
   );

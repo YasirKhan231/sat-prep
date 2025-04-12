@@ -54,7 +54,10 @@ export default function DashboardCards() {
             Challenge yourself with a new practice test
           </p>
         </Link>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all">
+        <Link
+          href="/study-plan"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all"
+        >
           <div className="text-green-500 dark:text-green-400 text-3xl mb-4">
             📋
           </div>
@@ -62,7 +65,7 @@ export default function DashboardCards() {
           <p className="text-gray-600 dark:text-gray-300">
             Check your personalized study schedule
           </p>
-        </div>
+        </Link>
         <Link
           href="/ai-lessons"
           className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all"
