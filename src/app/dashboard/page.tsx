@@ -95,10 +95,10 @@ export default function DashboardPage() {
                 Flashcards
               </Link>
               <Link
-                href="#"
+                href="study-plan"
                 className="text-gray-300 hover:text-white transition-colors"
               >
-                Resources
+                Study plan
               </Link>
             </div>
             <div className="flex items-center space-x-4">

@@ -5,6 +5,10 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { db } from "@/lib/firebase";
+import { collection, doc, setDoc } from "firebase/firestore";
+import OpenAI from "openai";
+import { jsonrepair } from "jsonrepair";
 import {
   Sun,
   Moon,
@@ -31,6 +35,8 @@ interface Flashcard {
   nextReview: string;
   srsLevel: number;
   userId?: string;
+  difficulty?: string;
+  tags?: string[];
 }
 
 export default function FlashcardsPage() {
@@ -56,6 +62,12 @@ export default function FlashcardsPage() {
   const [numCards, setNumCards] = useState("10");
   const [difficulty, setDifficulty] = useState("medium");
 
+  // Initialize OpenAI client
+  const openai = new OpenAI({
+    apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+  });
+
   // Check auth state on component mount
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -63,7 +75,6 @@ export default function FlashcardsPage() {
         setUserId(user.uid);
         loadUserFlashcards(user.uid);
       } else {
-        // If not authenticated, redirect to signin
         router.push("/signin");
       }
       setLoadingAuth(false);
@@ -72,7 +83,7 @@ export default function FlashcardsPage() {
     return () => unsubscribe();
   }, [auth, router]);
 
-  // Load user's flashcards from localStorage or backend
+  // Load user's flashcards from localStorage
   const loadUserFlashcards = (uid: string) => {
     const savedCards = localStorage.getItem(`studypro_flashcards_${uid}`);
     if (savedCards) {
@@ -170,7 +181,7 @@ export default function FlashcardsPage() {
   };
 
   // Add new flashcard
-  const handleAddFlashcard = (e: React.FormEvent) => {
+  const handleAddFlashcard = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!userId) {
@@ -178,25 +189,41 @@ export default function FlashcardsPage() {
       return;
     }
 
+    const cardId = `${userId}_${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 9)}`;
+    const now = new Date().toISOString();
+
     const newCard: Flashcard = {
+      id: cardId,
       front: frontContent,
       back: backContent,
       category: category,
-      created: new Date().toISOString(),
+      created: now,
       lastReviewed: null,
-      nextReview: new Date().toISOString(),
+      nextReview: now,
       srsLevel: 0,
       userId: userId,
+      tags: [category.toLowerCase().replace(/\s+/g, "-")],
     };
 
-    setFlashcards([...flashcards, newCard]);
-    setFrontContent("");
-    setBackContent("");
-    setCategory("");
-    setShowAddModal(false);
+    try {
+      // Save to Firestore
+      await setDoc(doc(db, "users", userId, "flashcards", cardId), newCard);
+
+      // Update local state
+      setFlashcards([...flashcards, newCard]);
+      setFrontContent("");
+      setBackContent("");
+      setCategory("");
+      setShowAddModal(false);
+    } catch (error) {
+      console.error("Error saving flashcard:", error);
+      alert("Failed to save flashcard");
+    }
   };
 
-  // Generate flashcards with AI
+  // Generate flashcards with AI (now fully client-side)
   const handleGenerateFlashcards = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -208,36 +235,90 @@ export default function FlashcardsPage() {
     setIsGenerating(true);
 
     try {
-      // Get the user's ID token
-      const token = await auth.currentUser?.getIdToken();
+      const prompt = `Generate ${numCards} high-quality study flashcards on the topic "${topic}" at ${difficulty} difficulty level. 
+Format each card as a JSON object with "front" (question) and "back" (detailed answer/solution) properties.
+Return as a JSON array of objects. Provide challenging questions that test actual understanding.
+Include detailed explanations and steps in the answers. For math questions, include the complete solution process.`;
 
-      if (!token) {
-        throw new Error("Authentication token not available");
-      }
-
-      const response = await fetch("/api/flashcards", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          topic,
-          difficulty,
-          numCards: parseInt(numCards),
-          userId,
-        }),
+      const completion = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an expert tutor specializing in creating high-quality educational flashcards.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 2500,
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || "Failed to generate flashcards");
+      const content = completion.choices[0].message.content;
+      if (!content) {
+        throw new Error("No content generated from OpenAI");
       }
 
-      if (result.cards && Array.isArray(result.cards)) {
-        setFlashcards((prev) => [...prev, ...result.cards]);
+      // Parse the generated cards
+      let generatedCards;
+      try {
+        const jsonMatch = content.match(/```json\n([\s\S]*?)\n```/) ||
+          content.match(/```\n([\s\S]*?)\n```/) || [null, content];
+        const jsonContent = jsonMatch[1];
+        generatedCards = JSON.parse(jsonrepair(jsonContent));
+      } catch (parseError) {
+        console.error("Error parsing generated cards:", parseError);
+        throw new Error("Failed to parse the generated flashcards");
       }
+
+      // Add metadata and store in Firestore
+      const now = new Date().toISOString();
+      const deckId = `${userId}_${Date.now()}`;
+      const cardIds: string[] = [];
+
+      // Process each generated card
+      for (const card of generatedCards) {
+        const cardId = `${userId}_${Date.now()}_${Math.random()
+          .toString(36)
+          .substring(2, 9)}`;
+        const cardData = {
+          ...card,
+          id: cardId,
+          userId,
+          category: topic,
+          difficulty,
+          created: now,
+          lastReviewed: null,
+          nextReview: now,
+          srsLevel: 0,
+          tags: [topic.toLowerCase().replace(/\s+/g, "-")],
+        };
+
+        await setDoc(doc(db, "users", userId, "flashcards", cardId), cardData);
+        cardIds.push(cardId);
+
+        // Update local state
+        setFlashcards((prev) => [...prev, cardData]);
+      }
+
+      // Create a deck document in user's subcollection
+      const deckData = {
+        id: deckId,
+        title: `${topic} Study Deck`,
+        description: `Flashcards for ${topic} at ${difficulty} level`,
+        created: now,
+        lastUpdated: now,
+        cardIds,
+        cardCount: generatedCards.length,
+        isPublic: false,
+        tags: [topic.toLowerCase().replace(/\s+/g, "-")],
+      };
+
+      await setDoc(doc(db, "users", userId, "decks", deckId), deckData);
+
       setTopic("");
       setShowGenerateModal(false);
     } catch (error: any) {
