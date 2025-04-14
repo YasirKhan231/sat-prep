@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  onAuthStateChanged,
 } from "firebase/auth";
 import { googleProvider } from "@/lib/firebase";
 import { Sun, Moon } from "lucide-react";
@@ -18,6 +19,21 @@ export default function AuthForm({ type }: { type: "signin" | "signup" }) {
   const [error, setError] = useState("");
   const router = useRouter();
   const [theme, setTheme] = useState<"light" | "dark">("dark");
+  const [loading, setLoading] = useState(true);
+
+  // Check auth state and redirect if already logged in
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push("/dashboard");
+      } else {
+        setLoading(false);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [router]);
 
   // Load saved theme preference
   useEffect(() => {
@@ -57,6 +73,14 @@ export default function AuthForm({ type }: { type: "signin" | "signup" }) {
       setError(err.message);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#121220]">
+        <div className="text-white">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div

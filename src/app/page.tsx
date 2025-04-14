@@ -83,11 +83,11 @@ export default function Home() {
                 className="md:w-1/2 relative"
               >
                 <div className="relative">
-                  {/* Purple glow background */}
-                  <div className="absolute inset-0 w-full h-full bg-violet-600/30 rounded-3xl blur-3xl transform scale-110"></div>
+                  {/* Reduced purple glow intensity */}
+                  <div className="absolute inset-0 w-full h-full bg-violet-600/20 rounded-3xl blur-xl transform scale-105"></div>
 
                   {/* Laptop screenshot */}
-                  <div className="relative bg-violet-900/20 backdrop-blur-sm rounded-3xl p-5 border border-violet-500/20 shadow-2xl">
+                  <div className="relative bg-violet-900/10 backdrop-blur-sm rounded-3xl p-5 border border-violet-500/10 shadow-lg">
                     <div className="rounded-lg overflow-hidden shadow-lg">
                       <div className="bg-[#121220] border border-violet-500/10">
                         <div className="bg-[#121220] border-b border-gray-700 p-2 flex items-center space-x-1">
@@ -221,10 +221,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
+        {/* Testimonials Section with reduced gradient */}
         <section
           id="testimonials"
-          className="py-24 bg-gradient-to-t from-[#5E4497] to-[#18181B] "
+          className="py-24 bg-gradient-to-t from-[#5E4497]/60 to-[#18181B]/90"
         >
           <div className="container max-w-7xl mx-auto px-4 md:px-6">
             <div className="text-center mb-16">
@@ -402,10 +402,10 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Institutional Plans Section */}
+        {/* Institutional Plans Section with reduced gradient */}
         <section
           id="institutions"
-          className="py-24 bg-gradient-to-b from-[#5E4497] to-[#18181B] relative overflow-hidden"
+          className="py-24 bg-gradient-to-b from-[#5E4497]/50 to-[#18181B] relative overflow-hidden"
         >
           <div className="container max-w-7xl mx-auto px-4 md:px-6 text-center relative z-10">
             <motion.div
@@ -425,7 +425,7 @@ export default function Home() {
               <div className="flex flex-col md:flex-row gap-4 justify-center">
                 <Link
                   href="/signin"
-                  className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium py-3 px-8 rounded-md transition-all shadow-lg hover:shadow-purple-500/30 transform hover:-translate-y-0.5"
+                  className="inline-block bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium py-3 px-8 rounded-md transition-all shadow-lg hover:shadow-purple-500/20 transform hover:-translate-y-0.5"
                 >
                   Learn more
                 </Link>
@@ -612,8 +612,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* QR Code Section */}
-        <section className=" bg-gradient-to-t pt-32 from-[#5E4497] to-[#18181B] relative overflow-hidden">
+        {/* QR Code Section with reduced gradient */}
+        <section className="bg-gradient-to-t pt-32 from-[#5E4497]/50 to-[#18181B] relative overflow-hidden">
           <div className="container max-w-7xl mx-auto px-4 md:px-6 text-center relative z-10">
             <h2 className="text-2xl md:text-3xl font-bold mb-10 text-white">
               Scan On Phone <span className="text-gray-400">or</span> Click
@@ -621,11 +621,11 @@ export default function Home() {
 
             <div className="inline-block mb-20">
               <div className="w-64 h-64 relative">
-                {/* Purple glow effect */}
-                <div className="absolute inset-0 bg-violet-600/50 blur-xl transform scale-110 rounded-lg"></div>
+                {/* Reduced purple glow effect */}
+                <div className="absolute inset-0 bg-violet-600/30 blur-lg transform scale-105 rounded-lg"></div>
 
                 {/* QR code */}
-                <div className="relative bg-white p-2 rounded-lg shadow-xl">
+                <div className="relative bg-white p-2 rounded-lg shadow-lg">
                   <Image
                     src="/qr-code-placeholder.png"
                     alt="QR Code to download studypro .ai"
@@ -668,8 +668,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      {/* Footer with URL */}
     </div>
   );
 }

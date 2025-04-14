@@ -1,9 +1,10 @@
 "use client";
 
 import type React from "react";
-
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   Sun,
   Moon,
@@ -21,6 +22,7 @@ import {
 } from "lucide-react";
 
 interface Flashcard {
+  id?: string;
   front: string;
   back: string;
   category: string;
@@ -28,17 +30,23 @@ interface Flashcard {
   lastReviewed: string | null;
   nextReview: string;
   srsLevel: number;
+  userId?: string;
 }
 
 export default function FlashcardsPage() {
+  const router = useRouter();
+  const auth = getAuth();
+
   // State management
   const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [isDarkMode, setIsDarkMode] = useState(true); // Default to dark mode
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showGenerateModal, setShowGenerateModal] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   // Form state
   const [frontContent, setFrontContent] = useState("");
@@ -48,12 +56,25 @@ export default function FlashcardsPage() {
   const [numCards, setNumCards] = useState("10");
   const [difficulty, setDifficulty] = useState("medium");
 
-  // Load flashcards from localStorage on component mount
+  // Check auth state on component mount
   useEffect(() => {
-    const savedDarkMode = localStorage.getItem("darkMode") === "true";
-    setIsDarkMode(savedDarkMode);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserId(user.uid);
+        loadUserFlashcards(user.uid);
+      } else {
+        // If not authenticated, redirect to signin
+        router.push("/signin");
+      }
+      setLoadingAuth(false);
+    });
 
-    const savedCards = localStorage.getItem("studypro_flashcards");
+    return () => unsubscribe();
+  }, [auth, router]);
+
+  // Load user's flashcards from localStorage or backend
+  const loadUserFlashcards = (uid: string) => {
+    const savedCards = localStorage.getItem(`studypro_flashcards_${uid}`);
     if (savedCards) {
       try {
         const parsedCards = JSON.parse(savedCards);
@@ -64,12 +85,17 @@ export default function FlashcardsPage() {
         console.error("Failed to parse saved flashcards", e);
       }
     }
-  }, []);
+  };
 
   // Save flashcards to localStorage whenever they change
   useEffect(() => {
-    localStorage.setItem("studypro_flashcards", JSON.stringify(flashcards));
-  }, [flashcards]);
+    if (userId) {
+      localStorage.setItem(
+        `studypro_flashcards_${userId}`,
+        JSON.stringify(flashcards)
+      );
+    }
+  }, [flashcards, userId]);
 
   // Reset current card index when flashcards change
   useEffect(() => {
@@ -147,6 +173,11 @@ export default function FlashcardsPage() {
   const handleAddFlashcard = (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!userId) {
+      alert("You must be signed in to add flashcards");
+      return;
+    }
+
     const newCard: Flashcard = {
       front: frontContent,
       back: backContent,
@@ -155,6 +186,7 @@ export default function FlashcardsPage() {
       lastReviewed: null,
       nextReview: new Date().toISOString(),
       srsLevel: 0,
+      userId: userId,
     };
 
     setFlashcards([...flashcards, newCard]);
@@ -164,21 +196,36 @@ export default function FlashcardsPage() {
     setShowAddModal(false);
   };
 
-  // Generate flashcards with AI (direct implementation)
+  // Generate flashcards with AI
   const handleGenerateFlashcards = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!userId) {
+      alert("You must be signed in to generate flashcards");
+      return;
+    }
+
     setIsGenerating(true);
 
     try {
+      // Get the user's ID token
+      const token = await auth.currentUser?.getIdToken();
+
+      if (!token) {
+        throw new Error("Authentication token not available");
+      }
+
       const response = await fetch("/api/flashcards", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           topic,
           difficulty,
-          numCards,
+          numCards: parseInt(numCards),
+          userId,
         }),
       });
 
@@ -210,8 +257,24 @@ export default function FlashcardsPage() {
   // Get current card safely
   const currentCard = flashcards[currentCardIndex] || null;
 
+  if (loadingAuth) {
+    return (
+      <div
+        className={`min-h-screen flex items-center justify-center ${
+          isDarkMode ? "bg-[#121220]" : "bg-gray-100"
+        }`}
+      >
+        <div className="text-white">
+          <Loader className="animate-spin h-8 w-8" />
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#121220] text-white">
+    <div
+      className={`min-h-screen ${isDarkMode ? "bg-[#121220]" : "bg-gray-100"}`}
+    >
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <header className="flex items-center justify-between py-4 border-b border-purple-900/20 mb-8">
