@@ -7,8 +7,9 @@ import { ThemeProvider } from "@/context/ThemeContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "StudyPro - AI-Powered Learning Platform",
-  description: "Revolutionize your SAT prep with AI-powered learning",
+  title: "turbolearn ai - Learn faster, a lot faster",
+  description:
+    "Transform any audio, video, or PDF into instant notes, flashcards, quizzes, and chatbot",
 };
 
 export default function RootLayout({

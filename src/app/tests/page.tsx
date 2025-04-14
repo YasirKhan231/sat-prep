@@ -18,14 +18,24 @@ export default function TestsPage() {
 
   if (loading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
+      <div className="min-h-screen flex items-center justify-center bg-[#121220] text-white">
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 rounded-full bg-purple-600 animate-pulse"></div>
+          <div
+            className="w-4 h-4 rounded-full bg-indigo-600 animate-pulse"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
+          <div
+            className="w-4 h-4 rounded-full bg-purple-600 animate-pulse"
+            style={{ animationDelay: "0.4s" }}
+          ></div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-[#121220] text-white">
       <Navbar />
       <main className="flex-grow py-6">
         <TestSelection />

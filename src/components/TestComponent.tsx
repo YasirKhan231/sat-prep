@@ -15,7 +15,6 @@ interface TestComponentProps {
   testId: string;
 }
 
-// ... rest of your component code remains the same
 export default function TestComponent({ testId }: TestComponentProps) {
   const router = useRouter();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -82,8 +81,18 @@ export default function TestComponent({ testId }: TestComponentProps) {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-6">
-        <div className="text-center">Loading test questions...</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#121220] text-white">
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 rounded-full bg-purple-600 animate-pulse"></div>
+          <div
+            className="w-4 h-4 rounded-full bg-indigo-600 animate-pulse"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
+          <div
+            className="w-4 h-4 rounded-full bg-purple-600 animate-pulse"
+            style={{ animationDelay: "0.4s" }}
+          ></div>
+        </div>
       </div>
     );
   }
@@ -93,46 +102,46 @@ export default function TestComponent({ testId }: TestComponentProps) {
     ((currentQuestionIndex + 1) / questions.length) * 100;
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold dark:text-white">
-          SAT Practice Test - Reading
-        </h2>
-        <div className="flex items-center space-x-3">
-          <div className="px-4 py-2 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 rounded-lg">
-            {formatTime(timeLeft)}
+    <div className="min-h-screen bg-[#121220] text-white">
+      <div className="container mx-auto px-4 py-6">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+            SAT Practice Test - Reading
+          </h2>
+          <div className="flex items-center space-x-3">
+            <div className="px-4 py-2 bg-purple-900/40 border border-purple-500/30 text-white rounded-lg">
+              {formatTime(timeLeft)}
+            </div>
+            <button
+              onClick={() => {
+                if (
+                  confirm(
+                    "Are you sure you want to exit the test? Your progress will be lost."
+                  )
+                ) {
+                  router.push("/tests");
+                }
+              }}
+              className="px-4 py-2 bg-[#1e1e2f] hover:bg-[#2a2a3f] rounded-lg text-gray-200 border border-purple-500/20 transition-colors"
+            >
+              Exit Test
+            </button>
           </div>
-          <button
-            onClick={() => {
-              if (
-                confirm(
-                  "Are you sure you want to exit the test? Your progress will be lost."
-                )
-              ) {
-                router.push("/tests");
-              }
-            }}
-            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 rounded-lg text-gray-700 dark:text-gray-200"
-          >
-            Exit Test
-          </button>
         </div>
-      </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-6">
+        <div className="relative w-full h-2 bg-[#1e1e2f] rounded-full mb-6 overflow-hidden">
           <div
-            className="h-2 bg-blue-600 rounded-full"
+            className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"
             style={{ width: `${progressPercentage}%` }}
           ></div>
         </div>
 
-        <div>
+        <div className="bg-[#1e1e2f] border border-purple-900/30 rounded-xl p-6 shadow-lg shadow-purple-500/5 mb-6">
           <div className="mb-4">
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+            <p className="text-sm text-gray-400 mb-2">
               Question {currentQuestionIndex + 1} of {questions.length}
             </p>
-            <p className="text-lg font-medium mb-6 dark:text-white">
+            <p className="text-lg font-medium mb-6 text-white">
               {currentQuestion.text}
             </p>
           </div>
@@ -142,35 +151,46 @@ export default function TestComponent({ testId }: TestComponentProps) {
               <div
                 key={index}
                 onClick={() => handleOptionSelect(option)}
-                className={`option-container border rounded-lg p-3 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                className={`option-container border rounded-lg p-4 cursor-pointer transition-all ${
                   selectedOption === option
-                    ? "bg-blue-100 dark:bg-blue-900 border-blue-300 dark:border-blue-700"
-                    : "border-gray-300 dark:border-gray-600"
+                    ? "bg-gradient-to-r from-purple-900/50 to-indigo-900/50 border-purple-500/50"
+                    : "border-purple-900/20 hover:border-purple-500/30 hover:bg-[#2a2a3f]"
                 }`}
               >
-                {option}
+                <div className="flex items-center">
+                  <div
+                    className={`w-6 h-6 flex items-center justify-center rounded-full mr-3 ${
+                      selectedOption === option
+                        ? "bg-purple-500 text-white"
+                        : "bg-[#2a2a3f] text-gray-400 border border-purple-900/20"
+                    }`}
+                  >
+                    {String.fromCharCode(65 + index)}
+                  </div>
+                  <span>{option}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="flex justify-between">
-        <button
-          onClick={handlePrevQuestion}
-          disabled={currentQuestionIndex === 0}
-          className="px-6 py-3 bg-transparent border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          Previous
-        </button>
-        <button
-          onClick={handleNextQuestion}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          {currentQuestionIndex === questions.length - 1
-            ? "Finish Test"
-            : "Next"}
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={handlePrevQuestion}
+            disabled={currentQuestionIndex === 0}
+            className="px-6 py-3 bg-[#1e1e2f] border border-purple-900/30 rounded-lg hover:bg-[#2a2a3f] hover:border-purple-500/30 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-[#1e1e2f] disabled:hover:border-purple-900/30"
+          >
+            Previous
+          </button>
+          <button
+            onClick={handleNextQuestion}
+            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg transition-all shadow-lg hover:shadow-purple-500/30 transform hover:-translate-y-0.5"
+          >
+            {currentQuestionIndex === questions.length - 1
+              ? "Finish Test"
+              : "Next"}
+          </button>
+        </div>
       </div>
     </div>
   );
