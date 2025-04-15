@@ -79,7 +79,7 @@ export default function AILessonsPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen bg-[#121220]">
       <Sidebar
         activeSection={activeSection}
         onSectionClick={handleSectionClick}
@@ -88,7 +88,7 @@ export default function AILessonsPage() {
       <div className="flex-1 p-6 overflow-auto">
         {!activeSection && (
           <div className="flex items-center justify-center h-full">
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
+            <p className="text-gray-300 text-lg">
               Select a section from the sidebar to get started
             </p>
           </div>
@@ -113,10 +113,8 @@ export default function AILessonsPage() {
 
         {isLoading && (
           <div className="flex flex-col items-center justify-center h-64">
-            <div className="animate-spin h-8 w-8 text-blue-600" />
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
-              Generating AI content...
-            </p>
+            <div className="animate-spin h-8 w-8 text-violet-600" />
+            <p className="mt-2 text-gray-300">Generating AI content...</p>
           </div>
         )}
 

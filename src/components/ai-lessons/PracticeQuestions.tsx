@@ -42,19 +42,17 @@ export default function PracticeQuestions({
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-300 dark:border-gray-700">
-      <h2 className="text-xl font-semibold mb-4 text-blue-600 dark:text-blue-400">
+    <div className="bg-[#13131f] p-6 rounded-lg border border-gray-800">
+      <h2 className="text-xl font-semibold mb-4 text-purple-400">
         Practice Questions
       </h2>
       <div className="space-y-8">
         {questions.map((question) => (
           <div
             key={question.id}
-            className="border border-gray-300 dark:border-gray-700 p-4 rounded-lg bg-gray-50 dark:bg-gray-700"
+            className="border border-gray-700 p-4 rounded-lg bg-[#18181f]"
           >
-            <p className="font-medium mb-3 text-gray-800 dark:text-gray-200">
-              {question.question}
-            </p>
+            <p className="font-medium mb-3 text-white">{question.question}</p>
 
             <div className="space-y-2 mb-3">
               {question.options.map((option) => (
@@ -63,13 +61,13 @@ export default function PracticeQuestions({
                     type="radio"
                     id={`q${question.id}-${option}`}
                     name={`question-${question.id}`}
-                    className="mt-1 mr-2 accent-blue-600"
+                    className="mt-1 mr-2 accent-violet-600"
                     onChange={() => handleAnswerSelect(question.id, option)}
                     checked={userAnswers[question.id] === option}
                   />
                   <label
                     htmlFor={`q${question.id}-${option}`}
-                    className="cursor-pointer hover:text-blue-600 dark:hover:text-blue-400"
+                    className="cursor-pointer text-gray-300 hover:text-purple-400"
                   >
                     {option}
                   </label>
@@ -81,8 +79,8 @@ export default function PracticeQuestions({
               <div
                 className={`p-3 rounded-lg mt-3 ${
                   feedback[question.id].isCorrect
-                    ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 border border-green-500 dark:border-green-700"
-                    : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 border border-red-500 dark:border-red-700"
+                    ? "bg-green-900/30 text-green-300 border border-green-700/50"
+                    : "bg-red-900/30 text-red-300 border border-red-700/50"
                 }`}
               >
                 <p className="font-medium">

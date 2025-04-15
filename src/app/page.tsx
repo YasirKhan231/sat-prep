@@ -612,30 +612,193 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Feature Description Section */}
+        <section id="feature-details" className="py-24 bg-[#121220]">
+          <div className="container max-w-7xl mx-auto px-4 md:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              viewport={{ once: true }}
+              className="mb-16 text-center"
+            >
+              <h2 className="text-4xl font-bold mb-6 text-white">
+                How StudyPro Works
+              </h2>
+              <p className="text-gray-300 max-w-3xl mx-auto">
+                Our advanced AI technology transforms your learning materials
+                into engaging, effective study tools.
+              </p>
+            </motion.div>
+
+            {/* Feature 1: Text on left, video on right */}
+            <div className="flex flex-col md:flex-row items-center gap-10 mb-24">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                viewport={{ once: true }}
+                className="md:w-1/2"
+              >
+                <h3 className="text-3xl font-bold mb-4 text-purple-400">
+                  Smart Content Processing
+                </h3>
+                <div className="h-1 w-20 bg-violet-600 mb-6"></div>
+                <p className="text-gray-300 mb-4">
+                  Our AI engine analyzes your content—whether it's a lecture
+                  video, audio recording, or PDF document—and extracts the most
+                  important concepts and information.
+                </p>
+                <p className="text-gray-300">
+                  Using advanced natural language processing, we identify key
+                  terms, relationships between concepts, and critical
+                  information that you need to know for exams and assignments.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="md:w-1/2 relative"
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-violet-600/20 rounded-xl blur-xl transform scale-105"></div>
+                  <div className="relative bg-[#13131f] rounded-xl overflow-hidden border border-violet-500/20">
+                    <div className="aspect-video flex items-center justify-center">
+                      <div className="text-gray-300 flex flex-col items-center">
+                        <svg
+                          className="w-20 h-20 text-violet-500 mb-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <span className="text-lg">Smart Processing Demo</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Feature 2: Video on left, text on right */}
+            <div className="flex flex-col md:flex-row-reverse items-center gap-10 mb-24">
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                viewport={{ once: true }}
+                className="md:w-1/2"
+              >
+                <h3 className="text-3xl font-bold mb-4 text-purple-400">
+                  Personalized Study Materials
+                </h3>
+                <div className="h-1 w-20 bg-violet-600 mb-6"></div>
+                <p className="text-gray-300 mb-4">
+                  StudyPro generates custom study materials tailored to your
+                  learning style and the content you're studying.
+                </p>
+                <p className="text-gray-300">
+                  From concise notes that highlight key concepts to interactive
+                  flashcards that test your knowledge, our platform creates the
+                  perfect tools to help you master any subject efficiently.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="md:w-1/2 relative"
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-violet-600/20 rounded-xl blur-xl transform scale-105"></div>
+                  <div className="relative bg-[#13131f] rounded-xl overflow-hidden border border-violet-500/20">
+                    <div className="aspect-video flex items-center justify-center">
+                      <div className="text-gray-300 flex flex-col items-center">
+                        <svg
+                          className="w-20 h-20 text-violet-500 mb-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <span className="text-lg">Personalization Demo</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Feature 3: Text on left, video on right */}
+            <div className="flex flex-col md:flex-row items-center gap-10">
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                viewport={{ once: true }}
+                className="md:w-1/2"
+              >
+                <h3 className="text-3xl font-bold mb-4 text-purple-400">
+                  AI-Powered Learning Assistant
+                </h3>
+                <div className="h-1 w-20 bg-violet-600 mb-6"></div>
+                <p className="text-gray-300 mb-4">
+                  Have questions about your course material? Our AI learning
+                  assistant is available 24/7 to provide context-aware answers.
+                </p>
+                <p className="text-gray-300">
+                  Unlike generic chatbots, our assistant has deep knowledge of
+                  your specific materials, allowing for more relevant and
+                  accurate assistance tailored to your coursework.
+                </p>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="md:w-1/2 relative"
+              >
+                <div className="relative">
+                  <div className="absolute inset-0 bg-violet-600/20 rounded-xl blur-xl transform scale-105"></div>
+                  <div className="relative bg-[#13131f] rounded-xl overflow-hidden border border-violet-500/20">
+                    <div className="aspect-video flex items-center justify-center">
+                      <div className="text-gray-300 flex flex-col items-center">
+                        <svg
+                          className="w-20 h-20 text-violet-500 mb-4"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+                            clipRule="evenodd"
+                          ></path>
+                        </svg>
+                        <span className="text-lg">AI Assistant Demo</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* QR Code Section with reduced gradient */}
         <section className="bg-gradient-to-t pt-32 from-[#5E4497]/50 to-[#18181B] relative overflow-hidden">
           <div className="container max-w-7xl mx-auto px-4 md:px-6 text-center relative z-10">
-            <h2 className="text-2xl md:text-3xl font-bold mb-10 text-white">
-              Scan On Phone <span className="text-gray-400">or</span> Click
-            </h2>
-
-            <div className="inline-block mb-20">
-              <div className="w-64 h-64 relative">
-                {/* Reduced purple glow effect */}
-                <div className="absolute inset-0 bg-violet-600/30 blur-lg transform scale-105 rounded-lg"></div>
-
-                {/* QR code */}
-                <div className="relative bg-white p-2 rounded-lg shadow-lg">
-                  <Image
-                    src="/qr-code-placeholder.png"
-                    alt="QR Code to download studypro .ai"
-                    className="w-full h-full object-cover"
-                    width={250}
-                    height={250}
-                  />
-                </div>
-              </div>
-            </div>
             <div className="py-1 px-2 text-xs text-gray-500">
               <div className="flex items-center justify-center text-white pb-8">
                 <svg

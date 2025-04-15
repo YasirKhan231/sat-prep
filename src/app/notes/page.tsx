@@ -338,21 +338,35 @@ export default function NotesProcessor() {
   };
 
   return (
-    <div className="min-h-screen bg-blue-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors">
+    <div className="min-h-screen bg-[#121220] text-white">
       <Head>
         <title>Notes Processor</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <header className="bg-gradient-to-r from-blue-600 to-purple-500 text-white py-6 text-center shadow-md">
-        <h1 className="text-3xl font-bold">Notes Processor</h1>
+      <header className="fixed w-full z-50 backdrop-blur-md bg-[#121220]/80 border-b border-purple-900/20">
+        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
+          <div className="flex items-center group">
+            <span className="font-bold text-xl group-hover:text-purple-400 transition-colors">
+              Notes Processor
+            </span>
+          </div>
+          <div>
+            <button
+              onClick={toggleDarkMode}
+              className="text-gray-300 hover:text-purple-400 transition-colors"
+            >
+              {isDarkMode ? "☀️" : "🌙"}
+            </button>
+          </div>
+        </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-8 pt-24">
         {/* Input Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           {/* Recording Box */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="bg-[#13131f] rounded-lg border border-gray-800 p-6">
             <div className="flex items-center gap-2 text-lg font-semibold mb-4">
               <span>🎙️</span> Voice Recording
             </div>
@@ -363,7 +377,7 @@ export default function NotesProcessor() {
                   <span>Recording...</span>
                 </div>
               ) : audioBlob ? (
-                <div className="text-blue-600 dark:text-blue-400">
+                <div className="text-purple-400">
                   Recording saved ({Math.round(audioBlob.size / 1024)} KB)
                 </div>
               ) : null}
@@ -372,14 +386,14 @@ export default function NotesProcessor() {
               <button
                 onClick={startRecording}
                 disabled={isRecording}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md disabled:opacity-50"
+                className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md disabled:opacity-50"
               >
                 Start
               </button>
               <button
                 onClick={stopRecording}
                 disabled={!isRecording}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-md disabled:opacity-50"
+                className="px-4 py-2 bg-[#18181f] hover:bg-gray-700 rounded-md disabled:opacity-50"
               >
                 Stop
               </button>
@@ -387,7 +401,7 @@ export default function NotesProcessor() {
           </div>
 
           {/* File Upload */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="bg-[#13131f] rounded-lg border border-gray-800 p-6">
             <div className="flex items-center gap-2 text-lg font-semibold mb-4">
               <span>📄</span> Upload Document
             </div>
@@ -396,17 +410,17 @@ export default function NotesProcessor() {
               ref={fileInputRef}
               onChange={handleFileChange}
               accept=".pdf,.docx,.txt"
-              className="w-full"
+              className="w-full text-gray-300"
             />
             {file && (
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              <div className="mt-2 text-sm text-gray-400">
                 Selected: {file.name}
               </div>
             )}
           </div>
 
           {/* YouTube URL */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="bg-[#13131f] rounded-lg border border-gray-800 p-6">
             <div className="flex items-center gap-2 text-lg font-semibold mb-4">
               <span>🔗</span> YouTube URL
             </div>
@@ -415,7 +429,7 @@ export default function NotesProcessor() {
               value={youtubeUrl}
               onChange={(e) => setYoutubeUrl(e.target.value)}
               placeholder="Paste YouTube URL"
-              className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700"
+              className="w-full px-4 py-2 rounded-md border border-gray-700 bg-[#18181f] text-white"
             />
           </div>
         </div>
@@ -424,7 +438,7 @@ export default function NotesProcessor() {
         <button
           onClick={processWithOpenAI}
           disabled={isLoading}
-          className="w-full max-w-md mx-auto block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md mb-8 disabled:opacity-70"
+          className="w-full max-w-md mx-auto block px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg shadow-md mb-8 disabled:opacity-70"
         >
           {isLoading ? "Processing..." : "✨ Create Notes"}
         </button>
@@ -436,8 +450,8 @@ export default function NotesProcessor() {
               key={index}
               className={`p-3 rounded-md border-l-4 ${
                 msg.type === "error"
-                  ? "bg-red-50 dark:bg-red-900/30 border-red-500 text-red-700 dark:text-red-300"
-                  : "bg-blue-50 dark:bg-blue-900/30 border-blue-500 text-blue-700 dark:text-blue-300"
+                  ? "bg-red-900/30 border-red-500 text-red-300"
+                  : "bg-blue-900/30 border-blue-500 text-blue-300"
               }`}
             >
               {msg.message}
@@ -447,7 +461,7 @@ export default function NotesProcessor() {
 
         {/* Generated Notes */}
         {selectedNote && (
-          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="mt-8 bg-[#13131f] rounded-lg border border-gray-800 p-6">
             <h2 className="text-2xl font-bold mb-6">📝 {selectedNote.title}</h2>
             <div className="space-y-6">{formatNotes(selectedNote.notes)}</div>
           </div>
@@ -455,30 +469,30 @@ export default function NotesProcessor() {
 
         {/* Saved Notes */}
         {notes.length > 0 && (
-          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <div className="mt-8 bg-[#13131f] rounded-lg border border-gray-800 p-6">
             <h2 className="text-2xl font-bold mb-6">📚 Saved Notes</h2>
             <div className="space-y-3">
               {notes.map((note) => (
                 <div
                   key={note.id}
-                  className="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-700 rounded-md"
+                  className="flex justify-between items-center p-4 bg-[#18181f] rounded-md"
                 >
                   <div>
                     <div className="font-semibold">{note.title}</div>
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                    <div className="text-sm text-gray-400">
                       {formatDate(note.createdAt)}
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={() => note.id && setSelectedNote(note)}
-                      className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500"
+                      className="p-2 rounded-full bg-gray-800 hover:bg-gray-700"
                     >
                       👁️
                     </button>
                     <button
                       onClick={() => note.id && deleteNote(note.id)}
-                      className="p-2 rounded-full bg-gray-200 dark:bg-gray-600 hover:bg-red-100 dark:hover:bg-red-900/50"
+                      className="p-2 rounded-full bg-gray-800 hover:bg-red-900/50"
                     >
                       🗑️
                     </button>
@@ -490,13 +504,21 @@ export default function NotesProcessor() {
         )}
       </main>
 
-      <footer className="py-8 text-center border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <button
-          onClick={toggleDarkMode}
-          className="text-blue-600 dark:text-blue-400 hover:underline"
-        >
-          {isDarkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
-        </button>
+      <footer className="py-8 text-center border-t border-purple-900/20 bg-[#121220]">
+        <div className="flex items-center justify-center text-white pb-4">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="mr-2"
+          >
+            <path d="M13 19L22 12L13 5V19Z" fill="white" />
+            <path d="M2 19L11 12L2 5V19Z" fill="white" fillOpacity="0.5" />
+          </svg>
+          <span className="font-medium text-lg">StudyPro</span>
+        </div>
       </footer>
     </div>
   );

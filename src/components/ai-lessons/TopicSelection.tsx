@@ -19,7 +19,7 @@ export default function TopicSelection({
 
   return (
     <div className="mb-6">
-      <h2 className="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">
+      <h2 className="text-2xl font-semibold mb-4 text-white">
         {section} Topics
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -27,10 +27,10 @@ export default function TopicSelection({
           <button
             key={topic}
             onClick={() => onTopicClick(topic)}
-            className={`p-3 text-left rounded-lg shadow-md transition-all duration-200 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 transform hover:scale-105 ${
+            className={`p-3 text-left rounded-lg shadow-md transition-all duration-200 bg-[#13131f] border border-gray-800 hover:bg-[#18181f] transform hover:scale-105 ${
               activeTopic === topic
-                ? "border-2 border-blue-500 text-blue-600 dark:text-blue-400"
-                : ""
+                ? "border-2 border-purple-500 text-purple-400"
+                : "text-gray-300"
             }`}
           >
             {topic}
