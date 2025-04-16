@@ -56,10 +56,11 @@ export default function AuthForm({ type }: { type: "signin" | "signup" }) {
     try {
       if (type === "signin") {
         await signInWithEmailAndPassword(auth, email, password);
+        router.push("/dashboard");
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
+        router.push("/onboarding");
       }
-      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message);
     }
@@ -67,8 +68,16 @@ export default function AuthForm({ type }: { type: "signin" | "signup" }) {
 
   const handleGoogleSignIn = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
-      router.push("/dashboard");
+      const result = await signInWithPopup(auth, googleProvider);
+
+      // Check if this is a new user based on the Google sign-in result
+      const isNewUser = result._tokenResponse?.isNewUser;
+
+      if (type === "signup" || isNewUser) {
+        router.push("/onboarding");
+      } else {
+        router.push("/dashboard");
+      }
     } catch (err: any) {
       setError(err.message);
     }

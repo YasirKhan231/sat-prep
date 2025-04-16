@@ -1,96 +1,191 @@
 "use client";
 
 import Link from "next/link";
+import {
+  BookOpen,
+  Brain,
+  BarChart,
+  Clock,
+  Target,
+  Zap,
+  Book,
+  FileText,
+  MessageSquare,
+  Settings,
+  HelpCircle,
+} from "lucide-react";
 
 export default function DashboardCards() {
   return (
-    <>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h3 className="text-lg font-semibold mb-3 flex items-center">
-            <span className="mr-2">📅</span> Upcoming Test Date
-          </h3>
-          <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-            28
+    <div className="space-y-8">
+      {/* Main Feature Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Link href="/lessons">
+          <div className="bg-white dark:bg-[#1e1e2f] p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-purple-900/20">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  AI-Powered Study Lessons
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Personalized learning paths
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Days Remaining
+        </Link>
+
+        <Link href="/practice-tests">
+          <div className="bg-white dark:bg-[#1e1e2f] p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-purple-900/20">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Brain className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Practice Tests & Performance
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Track your progress
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h3 className="text-lg font-semibold mb-3 flex items-center">
-            <span className="mr-2">📈</span> Study Plan Progress
-          </h3>
-          <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-            65%
+        </Link>
+
+        <Link href="/subscription">
+          <div className="bg-white dark:bg-[#1e1e2f] p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-purple-900/20">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <Zap className="h-6 w-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Premium Features
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Unlock full potential
+                </p>
+              </div>
+            </div>
           </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Completion Rate
-          </div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow">
-          <h3 className="text-lg font-semibold mb-3 flex items-center">
-            <span className="mr-2">🎯</span> Last Practice Test Score
-          </h3>
-          <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1">
-            82%
-          </div>
-          <div className="text-sm text-gray-500 dark:text-gray-400">
-            Above Average
-          </div>
-        </div>
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Link
-          href="/tests"
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all"
-        >
-          <div className="text-blue-500 dark:text-blue-400 text-3xl mb-4">
-            ✏️
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Take Practice Test</h3>
-          <p className="text-gray-600 dark:text-gray-300">
-            Challenge yourself with a new practice test
-          </p>
-        </Link>
-        <Link
-          href="/study-plan"
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all"
-        >
-          <div className="text-green-500 dark:text-green-400 text-3xl mb-4">
-            📋
-          </div>
-          <h3 className="text-xl font-semibold mb-2">View Study Plan</h3>
-          <p className="text-gray-600 dark:text-gray-300">
-            Check your personalized study schedule
-          </p>
-        </Link>
-        <Link
-          href="/ai-lessons"
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-purple-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all"
-        >
-          <div className="text-purple-500 dark:text-purple-400 text-3xl mb-4">
-            💡
-          </div>
-          <h3 className="text-xl font-semibold mb-2">AI generated lessons</h3>
-          <p className="text-gray-600 dark:text-gray-300">
-            Get personalized learning content
-          </p>
-        </Link>
-        <Link
-          href="/notes"
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition-shadow cursor-pointer transform hover:scale-105 transition-all"
-        >
-          <div className="text-yellow-500 dark:text-yellow-400 text-3xl mb-4">
-            📊
-          </div>
-          <h3 className="text-xl font-semibold mb-2">Generate Notes</h3>
-          <p className="text-gray-600 dark:text-gray-300">
-            Create study notes from test content
-          </p>
-        </Link>
+      {/* Quick Actions Section */}
+      <div>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          Quick Actions
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Link href="/lessons" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg mb-2">
+                  <BookOpen className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Lessons
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/practice-tests" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg mb-2">
+                  <Brain className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Practice Tests
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/study-materials" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg mb-2">
+                  <Book className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Study Materials
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/notes" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg mb-2">
+                  <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Notes
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/chat" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg mb-2">
+                  <MessageSquare className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  AI Chat
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/settings" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-gray-100 dark:bg-gray-900/30 rounded-lg mb-2">
+                  <Settings className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Settings
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/help" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-lg mb-2">
+                  <HelpCircle className="h-5 w-5 text-red-600 dark:text-red-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Help Center
+                </span>
+              </div>
+            </div>
+          </Link>
+
+          <Link href="/subscription" className="group">
+            <div className="bg-white dark:bg-[#1e1e2f] p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow border border-purple-900/20 group-hover:border-purple-500">
+              <div className="flex flex-col items-center text-center">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg mb-2">
+                  <Zap className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                </div>
+                <span className="text-sm font-medium text-gray-900 dark:text-white">
+                  Upgrade
+                </span>
+              </div>
+            </div>
+          </Link>
+        </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -57,9 +57,12 @@ export default function TestSelection() {
             <label className="block text-sm font-medium mb-2 text-gray-300">
               Difficulty
             </label>
-            <select className="w-full p-3 bg-[#121220] rounded-lg border border-purple-900/30 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white">
+            <select
+              defaultValue="Medium"
+              className="w-full p-3 bg-[#121220] rounded-lg border border-purple-900/30 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-white"
+            >
               <option>Easy</option>
-              <option selected>Medium</option>
+              <option>Medium</option>
               <option>Hard</option>
               <option>Mixed</option>
             </select>
