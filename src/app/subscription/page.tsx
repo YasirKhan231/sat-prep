@@ -1,179 +1,147 @@
-import Link from "next/link";
-import { Check, X } from "lucide-react";
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import DashboardLayout from "@/components/DashboardLayout";
+import { Check } from "lucide-react";
 
 export default function SubscriptionPage() {
-  return (
-    <div className="min-h-screen bg-[#121220] py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Upgrade Your SAT Preparation
-          </h1>
-          <p className="text-xl text-gray-300">
-            Get unlimited access to AI-powered SAT training tools and
-            personalized study plans
-          </p>
-        </div>
+  const { user, loading } = useAuth();
+  const router = useRouter();
 
-        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
-          {/* Free Plan */}
-          <div className="bg-[#1E1E2E] rounded-lg shadow-xl p-8 border border-gray-700 flex flex-col">
-            <h2 className="text-2xl font-bold text-white mb-2">Free</h2>
-            <div className="flex items-baseline mb-8">
-              <span className="text-5xl font-extrabold text-white">$0</span>
-              <span className="text-gray-400 ml-2">/forever</span>
-            </div>
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push("/signin");
+    }
+  }, [user, loading, router]);
 
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  Limited question bank access
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">1 simulated SAT exam</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  Basic performance tracking
-                </span>
-              </li>
-              <li className="flex items-start">
-                <X className="h-6 w-6 text-red-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">
-                  AI explanations and tutoring
-                </span>
-              </li>
-              <li className="flex items-start">
-                <X className="h-6 w-6 text-red-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-400">Personalized study plans</span>
-              </li>
-            </ul>
-
-            <button className="w-full px-4 py-3 border border-gray-600 text-white rounded-md hover:bg-[#2A2A3A] transition-colors">
-              Current Plan
-            </button>
-          </div>
-
-          {/* Weekly Access Plan */}
-          <div className="bg-[#1E1E2E] rounded-lg shadow-xl p-8 border border-indigo-500 flex flex-col relative">
-            <div className="absolute -top-4 right-4">
-              <span className="bg-indigo-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                POPULAR
-              </span>
-            </div>
-
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Weekly Access
-            </h2>
-            <div className="flex items-baseline mb-8">
-              <span className="text-5xl font-extrabold text-white">$19.99</span>
-              <span className="text-gray-400 ml-2">/week</span>
-            </div>
-
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">Full question bank access</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  Unlimited simulated SAT exams
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  Advanced analytics & progress tracking
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  AI explanations and tutoring
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">Personalized study plans</span>
-              </li>
-            </ul>
-
-            <button className="w-full px-4 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium">
-              Subscribe Weekly
-            </button>
-          </div>
-
-          {/* Full Access Plan */}
-          <div className="bg-[#1E1E2E] rounded-lg shadow-xl p-8 border border-gray-700 flex flex-col">
-            <h2 className="text-2xl font-bold text-white mb-2">Full Access</h2>
-            <div className="flex items-baseline mb-8">
-              <span className="text-5xl font-extrabold text-white">$199</span>
-              <span className="text-gray-400 ml-2">/one-time</span>
-            </div>
-
-            <ul className="space-y-4 mb-8 flex-grow">
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">Full question bank access</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  Unlimited simulated SAT exams
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  Advanced analytics & progress tracking
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">
-                  AI explanations and tutoring
-                </span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">Personalized study plans</span>
-              </li>
-              <li className="flex items-start">
-                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
-                <span className="text-gray-300">Lifetime access</span>
-              </li>
-            </ul>
-
-            <button className="w-full px-4 py-3 bg-[#2A2A3A] text-white rounded-md hover:bg-[#353545] transition-colors font-medium">
-              Pay Once
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-16 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            100% Satisfaction Guarantee
-          </h2>
-          <p className="text-gray-300 max-w-2xl mx-auto">
-            If you're not satisfied with your subscription within the first 7
-            days, we'll provide a full refund. No questions asked.
-          </p>
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Back to Dashboard
-          </Link>
+  if (loading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#121220] text-white">
+        <div className="flex items-center space-x-2">
+          <div className="w-4 h-4 rounded-full bg-purple-600 animate-pulse"></div>
+          <div
+            className="w-4 h-4 rounded-full bg-indigo-600 animate-pulse"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
+          <div
+            className="w-4 h-4 rounded-full bg-purple-600 animate-pulse"
+            style={{ animationDelay: "0.4s" }}
+          ></div>
         </div>
       </div>
-    </div>
+    );
+  }
+
+  const plans = [
+    {
+      name: "Basic",
+      price: "Free",
+      description: "Get started with basic SAT preparation",
+      features: [
+        "Access to basic study materials",
+        "Limited practice questions",
+        "Basic progress tracking",
+        "Community forum access",
+      ],
+      buttonText: "Current Plan",
+      isCurrent: true,
+    },
+    {
+      name: "Premium",
+      price: "$19.99/month",
+      description: "Unlock advanced features and full content access",
+      features: [
+        "All Basic features",
+        "Unlimited practice questions",
+        "Personalized study plans",
+        "Advanced analytics",
+        "AI-powered tutoring",
+        "Live chat support",
+      ],
+      buttonText: "Upgrade Now",
+      isCurrent: false,
+      isPopular: true,
+    },
+    {
+      name: "Ultimate",
+      price: "$29.99/month",
+      description: "Get the complete SAT preparation experience",
+      features: [
+        "All Premium features",
+        "1-on-1 tutoring sessions",
+        "Essay review service",
+        "Priority support",
+        "Score improvement guarantee",
+        "Parent progress reports",
+      ],
+      buttonText: "Get Ultimate",
+      isCurrent: false,
+    },
+  ];
+
+  return (
+    <DashboardLayout>
+      <div className="space-y-6">
+        <div className="text-center max-w-2xl mx-auto">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-4">
+            Choose Your Plan
+          </h1>
+          <p className="text-gray-400">
+            Select the plan that best fits your SAT preparation needs
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {plans.map((plan) => (
+            <div
+              key={plan.name}
+              className={`bg-[#1e1e2f] rounded-lg border ${
+                plan.isPopular ? "border-purple-500" : "border-purple-900/30"
+              } p-6 relative`}
+            >
+              {plan.isPopular && (
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <span className="bg-purple-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    Most Popular
+                  </span>
+                </div>
+              )}
+
+              <div className="text-center mb-6">
+                <h2 className="text-xl font-semibold mb-2">{plan.name}</h2>
+                <div className="text-2xl font-bold text-purple-400 mb-2">
+                  {plan.price}
+                </div>
+                <p className="text-sm text-gray-400">{plan.description}</p>
+              </div>
+
+              <ul className="space-y-3 mb-6">
+                {plan.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-purple-400 flex-shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                className={`w-full py-2 rounded-lg font-medium text-sm ${
+                  plan.isCurrent
+                    ? "bg-gray-600 cursor-default"
+                    : plan.isPopular
+                    ? "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500"
+                    : "bg-[#252538] hover:bg-[#2d2d3d]"
+                }`}
+                disabled={plan.isCurrent}
+              >
+                {plan.buttonText}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </DashboardLayout>
   );
 }

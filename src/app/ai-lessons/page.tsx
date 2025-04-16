@@ -8,6 +8,7 @@ import SubtopicSelection from "@/components/ai-lessons/SubtopicSelection";
 import LessonContent from "@/components/ai-lessons/LessonContent";
 import PracticeQuestions from "@/components/ai-lessons/PracticeQuestions";
 import { Section } from "@/lib/syllabus";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface Question {
   id: number;
@@ -78,8 +79,8 @@ export default function AILessonsPage() {
     setIsLoading(false);
   };
 
-  return (
-    <div className="flex h-screen bg-[#121220]">
+  const AILessonContent = () => (
+    <div className="flex h-full bg-[#121220]">
       <Sidebar
         activeSection={activeSection}
         onSectionClick={handleSectionClick}
@@ -129,5 +130,14 @@ export default function AILessonsPage() {
         )}
       </div>
     </div>
+  );
+
+  return (
+    <DashboardLayout>
+      <div className="h-[calc(100vh-120px)]">
+        <h1 className="text-3xl font-bold mb-4">AI-Powered Lessons</h1>
+        <AILessonContent />
+      </div>
+    </DashboardLayout>
   );
 }

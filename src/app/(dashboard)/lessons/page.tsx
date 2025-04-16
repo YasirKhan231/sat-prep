@@ -1,8 +1,11 @@
+"use client";
+
 import StudyLessons from "@/components/StudyLessons";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function LessonsPage() {
   return (
-    <div className="min-h-screen bg-[#121220] text-white">
+    <DashboardLayout>
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
@@ -107,6 +110,6 @@ export default function LessonsPage() {
           <StudyLessons />
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

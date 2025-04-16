@@ -19,6 +19,7 @@ import {
 } from "@/lib/firebase";
 import { Timestamp } from "firebase/firestore";
 import { signInAnonymously, onAuthStateChanged, User } from "firebase/auth";
+import DashboardLayout from "@/components/DashboardLayout";
 
 interface Note {
   id?: string;
@@ -338,188 +339,189 @@ export default function NotesProcessor() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121220] text-white">
-      <Head>
-        <title>Notes Processor</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-      </Head>
-
-      <header className="fixed w-full z-50 backdrop-blur-md bg-[#121220]/80 border-b border-purple-900/20">
-        <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-3">
-          <div className="flex items-center group">
-            <span className="font-bold text-xl group-hover:text-purple-400 transition-colors">
-              Notes Processor
-            </span>
-          </div>
-          <div>
-            <button
-              onClick={toggleDarkMode}
-              className="text-gray-300 hover:text-purple-400 transition-colors"
-            >
-              {isDarkMode ? "☀️" : "🌙"}
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-5xl mx-auto px-4 py-8 pt-24">
-        {/* Input Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {/* Recording Box */}
-          <div className="bg-[#13131f] rounded-lg border border-gray-800 p-6">
-            <div className="flex items-center gap-2 text-lg font-semibold mb-4">
-              <span>🎙️</span> Voice Recording
-            </div>
-            <div className="mb-4">
-              {isRecording ? (
-                <div className="flex items-center">
-                  <span className="inline-block w-3 h-3 rounded-full bg-red-500 mr-2 animate-pulse"></span>
-                  <span>Recording...</span>
-                </div>
-              ) : audioBlob ? (
-                <div className="text-purple-400">
-                  Recording saved ({Math.round(audioBlob.size / 1024)} KB)
-                </div>
-              ) : null}
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={startRecording}
-                disabled={isRecording}
-                className="px-4 py-2 bg-violet-600 hover:bg-violet-700 text-white rounded-md disabled:opacity-50"
-              >
-                Start
-              </button>
-              <button
-                onClick={stopRecording}
-                disabled={!isRecording}
-                className="px-4 py-2 bg-[#18181f] hover:bg-gray-700 rounded-md disabled:opacity-50"
-              >
-                Stop
-              </button>
-            </div>
-          </div>
-
-          {/* File Upload */}
-          <div className="bg-[#13131f] rounded-lg border border-gray-800 p-6">
-            <div className="flex items-center gap-2 text-lg font-semibold mb-4">
-              <span>📄</span> Upload Document
-            </div>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".pdf,.docx,.txt"
-              className="w-full text-gray-300"
-            />
-            {file && (
-              <div className="mt-2 text-sm text-gray-400">
-                Selected: {file.name}
-              </div>
-            )}
-          </div>
-
-          {/* YouTube URL */}
-          <div className="bg-[#13131f] rounded-lg border border-gray-800 p-6">
-            <div className="flex items-center gap-2 text-lg font-semibold mb-4">
-              <span>🔗</span> YouTube URL
-            </div>
-            <input
-              type="text"
-              value={youtubeUrl}
-              onChange={(e) => setYoutubeUrl(e.target.value)}
-              placeholder="Paste YouTube URL"
-              className="w-full px-4 py-2 rounded-md border border-gray-700 bg-[#18181f] text-white"
-            />
-          </div>
-        </div>
-
-        {/* Process Button */}
-        <button
-          onClick={processWithOpenAI}
-          disabled={isLoading}
-          className="w-full max-w-md mx-auto block px-6 py-3 bg-violet-600 hover:bg-violet-700 text-white font-semibold rounded-lg shadow-md mb-8 disabled:opacity-70"
-        >
-          {isLoading ? "Processing..." : "✨ Create Notes"}
-        </button>
+    <DashboardLayout>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+          Smart Notes
+        </h1>
 
         {/* Status Messages */}
-        <div className="mt-4 space-y-2">
-          {statusMessages.map((msg, index) => (
+        <div className="fixed top-4 right-4 z-50 space-y-2">
+          {statusMessages.map((status, index) => (
             <div
               key={index}
-              className={`p-3 rounded-md border-l-4 ${
-                msg.type === "error"
-                  ? "bg-red-900/30 border-red-500 text-red-300"
-                  : "bg-blue-900/30 border-blue-500 text-blue-300"
-              }`}
+              className={`p-3 rounded-md shadow-md ${
+                status.type === "error"
+                  ? "bg-red-500 text-white"
+                  : status.type === "success"
+                  ? "bg-green-500 text-white"
+                  : "bg-blue-500 text-white"
+              } transition-all duration-300 animate-fadeIn`}
             >
-              {msg.message}
+              {status.message}
             </div>
           ))}
         </div>
 
-        {/* Generated Notes */}
-        {selectedNote && (
-          <div className="mt-8 bg-[#13131f] rounded-lg border border-gray-800 p-6">
-            <h2 className="text-2xl font-bold mb-6">📝 {selectedNote.title}</h2>
-            <div className="space-y-6">{formatNotes(selectedNote.notes)}</div>
-          </div>
-        )}
-
-        {/* Saved Notes */}
-        {notes.length > 0 && (
-          <div className="mt-8 bg-[#13131f] rounded-lg border border-gray-800 p-6">
-            <h2 className="text-2xl font-bold mb-6">📚 Saved Notes</h2>
-            <div className="space-y-3">
-              {notes.map((note) => (
-                <div
-                  key={note.id}
-                  className="flex justify-between items-center p-4 bg-[#18181f] rounded-md"
-                >
-                  <div>
-                    <div className="font-semibold">{note.title}</div>
-                    <div className="text-sm text-gray-400">
-                      {formatDate(note.createdAt)}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Input Section */}
+          <div className="md:col-span-1 bg-[#1e1e2f] p-6 rounded-xl border border-purple-900/30 shadow-lg shadow-purple-500/5">
+            <h2 className="text-xl font-semibold mb-4">Input</h2>
+            <div className="space-y-4">
+              {/* Audio Recording */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Voice Notes
+                </label>
+                <div className="flex flex-col items-center">
+                  <button
+                    onClick={isRecording ? stopRecording : startRecording}
+                    className={`w-full py-2 px-4 rounded-md flex items-center justify-center ${
+                      isRecording
+                        ? "bg-red-600 hover:bg-red-700"
+                        : "bg-purple-600 hover:bg-purple-700"
+                    } transition-colors`}
+                    disabled={isLoading}
+                  >
+                    {isRecording ? "Stop Recording" : "Start Recording"}
+                  </button>
+                  {audioBlob && (
+                    <div className="mt-2 w-full">
+                      <audio
+                        controls
+                        className="w-full"
+                        src={URL.createObjectURL(audioBlob)}
+                      />
                     </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => note.id && setSelectedNote(note)}
-                      className="p-2 rounded-full bg-gray-800 hover:bg-gray-700"
-                    >
-                      👁️
-                    </button>
-                    <button
-                      onClick={() => note.id && deleteNote(note.id)}
-                      className="p-2 rounded-full bg-gray-800 hover:bg-red-900/50"
-                    >
-                      🗑️
-                    </button>
-                  </div>
+                  )}
                 </div>
-              ))}
+              </div>
+
+              {/* File Upload */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Document Upload
+                </label>
+                <div className="flex flex-col">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.doc,.docx,.txt"
+                    onChange={handleFileChange}
+                    className="hidden"
+                    disabled={isLoading}
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="w-full py-2 px-4 bg-purple-600 hover:bg-purple-700 rounded-md transition-colors"
+                    disabled={isLoading}
+                  >
+                    Choose File
+                  </button>
+                  {file && (
+                    <div className="mt-2 text-sm">
+                      Selected:{" "}
+                      <span className="text-purple-400">{file.name}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* YouTube URL */}
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  YouTube URL
+                </label>
+                <input
+                  type="text"
+                  value={youtubeUrl}
+                  onChange={(e) => setYoutubeUrl(e.target.value)}
+                  placeholder="Paste YouTube URL"
+                  className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-md focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  disabled={isLoading}
+                />
+              </div>
+
+              {/* Process Button */}
+              <button
+                onClick={processWithOpenAI}
+                className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-md font-medium transition-all duration-200"
+                disabled={isLoading}
+              >
+                {isLoading ? "Processing..." : "Generate Notes"}
+              </button>
             </div>
           </div>
-        )}
-      </main>
 
-      <footer className="py-8 text-center border-t border-purple-900/20 bg-[#121220]">
-        <div className="flex items-center justify-center text-white pb-4">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="mr-2"
-          >
-            <path d="M13 19L22 12L13 5V19Z" fill="white" />
-            <path d="M2 19L11 12L2 5V19Z" fill="white" fillOpacity="0.5" />
-          </svg>
-          <span className="font-medium text-lg">StudyPro</span>
+          {/* Generated Notes */}
+          <div className="md:col-span-2 bg-[#1e1e2f] p-6 rounded-xl border border-purple-900/30 shadow-lg shadow-purple-500/5">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">
+                {selectedNote ? "Generated Notes" : "Saved Notes"}
+              </h2>
+              {selectedNote && (
+                <button
+                  onClick={() => setSelectedNote(null)}
+                  className="text-sm text-purple-400 hover:text-purple-300"
+                >
+                  Back to saved notes
+                </button>
+              )}
+            </div>
+
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center h-64">
+                <div className="w-10 h-10 border-4 border-purple-600 border-t-transparent rounded-full animate-spin" />
+                <p className="mt-4 text-gray-400">Processing your content...</p>
+              </div>
+            ) : selectedNote ? (
+              <div>
+                <h3 className="text-lg font-medium mb-2">
+                  {selectedNote.title}
+                </h3>
+                <div className="prose prose-invert max-w-none">
+                  {formatNotes(selectedNote.notes)}
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {notes.length === 0 ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-400">
+                      No saved notes yet. Generate your first notes to see them
+                      here.
+                    </p>
+                  </div>
+                ) : (
+                  notes.map((note) => (
+                    <div
+                      key={note.id}
+                      className="p-4 border border-purple-900/30 rounded-lg hover:bg-[#252538] transition-colors cursor-pointer"
+                      onClick={() => setSelectedNote(note)}
+                    >
+                      <div className="flex justify-between">
+                        <h3 className="font-medium">{note.title}</h3>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            note.id && deleteNote(note.id);
+                          }}
+                          className="text-red-400 hover:text-red-500"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                      <p className="text-sm text-gray-400 mt-1">
+                        {formatDate(note.createdAt)}
+                      </p>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
         </div>
-      </footer>
-    </div>
+      </div>
+    </DashboardLayout>
   );
 }

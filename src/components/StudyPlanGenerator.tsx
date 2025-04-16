@@ -66,6 +66,107 @@ const categoryToTopics: Record<string, string[]> = {
   ],
 };
 
+// Generate study plan based on inputs
+export const generateStudyPlan = (
+  testDateStr: string,
+  targetScore: number,
+  strengths: Record<string, number>
+): StudyPlan => {
+  const weeksUntilTest = calculateWeeksUntilTest(testDateStr);
+
+  // Determine focus areas based on strengths (prioritize areas with lower scores)
+  const focusAreas = Object.entries(strengths)
+    .sort(([, a], [, b]) => a - b)
+    .map(([category]) => category);
+
+  // Calculate recommended study hours based on average strength
+  const avgStrength =
+    Object.values(strengths).reduce((a, b) => a + b, 0) /
+    Object.values(strengths).length;
+  const recommendedHoursPerWeek = Math.min(
+    20,
+    Math.max(5, Math.ceil(25 - avgStrength * 4))
+  );
+
+  // Generate weekly plans
+  const weeklyPlans: WeeklyPlan[] = [];
+
+  for (let week = 1; week <= Math.min(weeksUntilTest, 8); week++) {
+    // Determine the focus for this week
+    const weekFocus = focusAreas[week % focusAreas.length];
+
+    // Generate daily tasks
+    const dailyTasks: DailyTask[] = [];
+
+    for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
+      const day = weekdays[dayIndex];
+      const tasks: string[] = [];
+
+      // Weekend: more intensive study
+      if (dayIndex >= 5) {
+        // Weekend tasks - practice tests and review
+        tasks.push("Complete a timed practice section");
+        tasks.push("Review incorrect answers");
+        tasks.push("Study flashcards for key concepts");
+      } else {
+        // Weekday tasks - focused learning
+        const topics = categoryToTopics[weekFocus] || [];
+        const topic = topics[Math.floor(Math.random() * topics.length)];
+
+        tasks.push(`Study ${topic}`);
+        tasks.push("Complete 15 practice questions");
+
+        // Add some variety based on the day
+        if (dayIndex === 1 || dayIndex === 3) {
+          tasks.push("Watch video lesson on difficult concepts");
+        } else if (dayIndex === 0 || dayIndex === 2) {
+          tasks.push("Review notes from previous sessions");
+        } else {
+          tasks.push("Take a short quiz to test knowledge");
+        }
+      }
+
+      dailyTasks.push({ day, tasks });
+    }
+
+    // Set goals for the week
+    const goals = [
+      `Master basic concepts in ${
+        weekFocus === "reading"
+          ? "Reading & Writing"
+          : weekFocus === "math_no_calc"
+          ? "Math (No Calculator)"
+          : "Math (Calculator)"
+      }`,
+      `Complete at least 100 practice questions`,
+      `Improve speed and accuracy on ${weekFocus} problems`,
+    ];
+
+    weeklyPlans.push({
+      week,
+      focus: weekFocus,
+      dailyTasks,
+      goals,
+    });
+  }
+
+  return {
+    weeksUntilTest,
+    weeklyPlans,
+    focusAreas,
+    recommendedHoursPerWeek,
+  };
+};
+
+// Calculate weeks until test date
+const calculateWeeksUntilTest = (testDateStr: string): number => {
+  const today = new Date();
+  const testDate = new Date(testDateStr);
+  const timeDiff = testDate.getTime() - today.getTime();
+  const daysDiff = timeDiff / (1000 * 3600 * 24);
+  return Math.max(1, Math.ceil(daysDiff / 7));
+};
+
 export default function StudyPlanGenerator({
   testDate,
   targetScore,
@@ -86,107 +187,6 @@ export default function StudyPlanGenerator({
 
     return () => clearTimeout(timer);
   }, [testDate, targetScore, strengths, onComplete]);
-
-  // Calculate weeks until test date
-  const calculateWeeksUntilTest = (testDateStr: string): number => {
-    const today = new Date();
-    const testDate = new Date(testDateStr);
-    const timeDiff = testDate.getTime() - today.getTime();
-    const daysDiff = timeDiff / (1000 * 3600 * 24);
-    return Math.max(1, Math.ceil(daysDiff / 7));
-  };
-
-  // Generate study plan based on inputs
-  const generateStudyPlan = (
-    testDateStr: string,
-    targetScore: number,
-    strengths: Record<string, number>
-  ): StudyPlan => {
-    const weeksUntilTest = calculateWeeksUntilTest(testDateStr);
-
-    // Determine focus areas based on strengths (prioritize areas with lower scores)
-    const focusAreas = Object.entries(strengths)
-      .sort(([, a], [, b]) => a - b)
-      .map(([category]) => category);
-
-    // Calculate recommended study hours based on average strength
-    const avgStrength =
-      Object.values(strengths).reduce((a, b) => a + b, 0) /
-      Object.values(strengths).length;
-    const recommendedHoursPerWeek = Math.min(
-      20,
-      Math.max(5, Math.ceil(25 - avgStrength * 4))
-    );
-
-    // Generate weekly plans
-    const weeklyPlans: WeeklyPlan[] = [];
-
-    for (let week = 1; week <= Math.min(weeksUntilTest, 8); week++) {
-      // Determine the focus for this week
-      const weekFocus = focusAreas[week % focusAreas.length];
-
-      // Generate daily tasks
-      const dailyTasks: DailyTask[] = [];
-
-      for (let dayIndex = 0; dayIndex < 7; dayIndex++) {
-        const day = weekdays[dayIndex];
-        const tasks: string[] = [];
-
-        // Weekend: more intensive study
-        if (dayIndex >= 5) {
-          // Weekend tasks - practice tests and review
-          tasks.push("Complete a timed practice section");
-          tasks.push("Review incorrect answers");
-          tasks.push("Study flashcards for key concepts");
-        } else {
-          // Weekday tasks - focused learning
-          const topics = categoryToTopics[weekFocus] || [];
-          const topic = topics[Math.floor(Math.random() * topics.length)];
-
-          tasks.push(`Study ${topic}`);
-          tasks.push("Complete 15 practice questions");
-
-          // Add some variety based on the day
-          if (dayIndex === 1 || dayIndex === 3) {
-            tasks.push("Watch video lesson on difficult concepts");
-          } else if (dayIndex === 0 || dayIndex === 2) {
-            tasks.push("Review notes from previous sessions");
-          } else {
-            tasks.push("Take a short quiz to test knowledge");
-          }
-        }
-
-        dailyTasks.push({ day, tasks });
-      }
-
-      // Set goals for the week
-      const goals = [
-        `Master basic concepts in ${
-          weekFocus === "reading"
-            ? "Reading & Writing"
-            : weekFocus === "math_no_calc"
-            ? "Math (No Calculator)"
-            : "Math (Calculator)"
-        }`,
-        `Complete at least 100 practice questions`,
-        `Improve speed and accuracy on ${weekFocus} problems`,
-      ];
-
-      weeklyPlans.push({
-        week,
-        focus: weekFocus,
-        dailyTasks,
-        goals,
-      });
-    }
-
-    return {
-      weeksUntilTest,
-      weeklyPlans,
-      focusAreas,
-      recommendedHoursPerWeek,
-    };
-  };
 
   if (generating) {
     return (
