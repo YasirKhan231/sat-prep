@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { db, auth, doc, setDoc, getDoc } from "@/lib/firebase";
 import { Sun, Moon, ChevronRight, ChevronLeft } from "lucide-react";
-import AssessmentQuiz, { AssessmentResults } from "@/components/AssessmentQuiz";
 import StudyPlanGenerator, { StudyPlan } from "@/components/StudyPlanGenerator";
 
 // Define subject areas for SAT
@@ -51,8 +50,6 @@ export default function OnboardingPage() {
     math_no_calc: 3,
     math_calc: 3,
   });
-  const [assessmentResults, setAssessmentResults] =
-    useState<AssessmentResults | null>(null);
   const [studyPlan, setStudyPlan] = useState<StudyPlan | null>(null);
 
   // Calculate minimum date (today + 1 day)
@@ -123,17 +120,12 @@ export default function OnboardingPage() {
     setStep((prevStep) => Math.max(1, prevStep - 1));
   };
 
-  const handleAssessmentComplete = (results: AssessmentResults) => {
-    setAssessmentResults(results);
-    nextStep();
-  };
-
   const handleStudyPlanComplete = (plan: StudyPlan) => {
     setStudyPlan(plan);
   };
 
   const submitOnboarding = async () => {
-    if (!user || !assessmentResults || !studyPlan) return;
+    if (!user || !studyPlan) return;
 
     setIsSubmitting(true);
     try {
@@ -144,7 +136,6 @@ export default function OnboardingPage() {
         testDate,
         targetScore,
         subjectProficiency: strengths,
-        assessmentResults,
         studyPlan,
         onboarding: true,
         createdAt: new Date().toISOString(),
@@ -179,9 +170,9 @@ export default function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-[#121220] text-white">
-      <div className="max-w-4xl mx-auto py-12 px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+      <div className="max-w-4xl mx-auto py-6 sm:py-12 px-4">
+        <div className="flex justify-between items-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
             StudyPro Onboarding
           </h1>
           <button
@@ -200,10 +191,10 @@ export default function OnboardingPage() {
         <div className="mb-8">
           {/* Progress Steps */}
           <div className="flex justify-between items-center max-w-2xl mx-auto mb-4">
-            {[1, 2, 3, 4, 5].map((stepNumber) => (
+            {[1, 2, 3, 4].map((stepNumber) => (
               <div key={stepNumber} className="flex flex-col items-center">
                 <div
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                  className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center transition-all text-sm sm:text-base ${
                     step === stepNumber
                       ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
                       : step > stepNumber
@@ -218,7 +209,7 @@ export default function OnboardingPage() {
           </div>
 
           {/* Progress labels */}
-          <div className="flex justify-between items-center max-w-2xl mx-auto text-xs text-gray-400">
+          <div className="flex justify-between items-center max-w-2xl mx-auto text-[10px] sm:text-xs text-gray-400">
             <div className="text-center">
               <span className={step >= 1 ? "text-purple-400" : ""}>
                 Test Date
@@ -235,10 +226,7 @@ export default function OnboardingPage() {
               </span>
             </div>
             <div className="text-center">
-              <span className={step >= 4 ? "text-purple-400" : ""}>Quiz</span>
-            </div>
-            <div className="text-center">
-              <span className={step >= 5 ? "text-purple-400" : ""}>
+              <span className={step >= 4 ? "text-purple-400" : ""}>
                 Study Plan
               </span>
             </div>
@@ -247,42 +235,25 @@ export default function OnboardingPage() {
 
         {/* Step 1: Test Date */}
         {step === 1 && (
-          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-8 border border-purple-900/30">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-center mb-4">
-                When are you planning to take the SAT?
-              </h2>
-              <p className="text-gray-400 text-center mb-6">
-                This helps us create a personalized study schedule for you.
-              </p>
-
-              <div className="max-w-md mx-auto">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Test Date
-                </label>
-                <input
-                  type="date"
-                  value={testDate}
-                  onChange={(e) => setTestDate(e.target.value)}
-                  min={minDateString}
-                  max={maxDateString}
-                  className="w-full px-4 py-2 rounded-lg border border-purple-900/30 bg-[#2d2d3d] text-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Navigation Buttons */}
-            <div className="mt-10 flex justify-end">
+          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-6 sm:p-8 border border-purple-900/30">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+              When is your SAT exam?
+            </h2>
+            <input
+              type="date"
+              min={minDateString}
+              max={maxDateString}
+              value={testDate}
+              onChange={(e) => setTestDate(e.target.value)}
+              className="w-full p-3 rounded-lg bg-[#2d2d3d] border border-purple-900/30 text-white mb-4 sm:mb-6 text-sm sm:text-base"
+            />
+            <div className="flex justify-end">
               <button
                 onClick={nextStep}
                 disabled={!testDate}
-                className={`flex items-center px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium transition-all shadow-md hover:shadow-purple-500/20 ${
-                  !testDate ? "opacity-50 cursor-not-allowed" : ""
-                }`}
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 Next
-                <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
           </div>
@@ -290,169 +261,118 @@ export default function OnboardingPage() {
 
         {/* Step 2: Target Score */}
         {step === 2 && (
-          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-8 border border-purple-900/30">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-center mb-4">
-                What's your target SAT score?
-              </h2>
-              <p className="text-gray-400 text-center mb-6">
-                We'll help you achieve your goal with personalized study
-                resources.
-              </p>
-
-              <div className="max-w-md mx-auto">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Target Score (400-1600)
-                </label>
-                <div className="flex items-center space-x-4">
-                  <input
-                    type="range"
-                    min="400"
-                    max="1600"
-                    step="10"
-                    value={targetScore}
-                    onChange={(e) => setTargetScore(parseInt(e.target.value))}
-                    className="w-full h-2 bg-[#2d2d3d] rounded-lg appearance-none cursor-pointer accent-purple-500"
-                  />
-                  <span className="bg-[#2d2d3d] px-3 py-1 rounded-md min-w-[80px] text-center">
-                    {targetScore}
-                  </span>
-                </div>
-              </div>
+          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-6 sm:p-8 border border-purple-900/30">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+              What's your target SAT score?
+            </h2>
+            <div className="flex items-center space-x-4 mb-4 sm:mb-6">
+              <input
+                type="range"
+                min="400"
+                max="1600"
+                step="10"
+                value={targetScore}
+                onChange={(e) => setTargetScore(parseInt(e.target.value))}
+                className="flex-grow"
+              />
+              <span className="text-xl sm:text-2xl font-bold text-purple-400 min-w-[80px] text-center">
+                {targetScore}
+              </span>
             </div>
-
-            {/* Navigation Buttons */}
-            <div className="mt-10 flex justify-between">
+            <div className="flex justify-between">
               <button
                 onClick={prevStep}
-                className="flex items-center px-4 py-2 rounded-lg bg-[#2d2d3d] text-gray-300 hover:bg-purple-900/30 transition-colors"
+                className="px-4 sm:px-6 py-2 sm:py-3 border border-purple-600 rounded-lg font-medium text-sm sm:text-base"
               >
-                <ChevronLeft className="w-4 h-4 mr-1" />
                 Back
               </button>
-
               <button
                 onClick={nextStep}
-                className="flex items-center px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium transition-all shadow-md hover:shadow-purple-500/20"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg font-medium text-sm sm:text-base"
               >
                 Next
-                <ChevronRight className="w-4 h-4 ml-1" />
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 3: Strengths & Weaknesses */}
+        {/* Step 3: Self Assessment */}
         {step === 3 && (
-          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-8 border border-purple-900/30">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-semibold text-center mb-4">
-                How would you rate your current abilities?
-              </h2>
-              <p className="text-gray-400 text-center mb-6">
-                Be honest! This helps us focus on areas where you need the most
-                improvement.
-              </p>
-
-              <div className="space-y-6">
-                {subjectAreas.map((subject) => (
-                  <div
-                    key={subject.id}
-                    className="bg-[#252538] p-4 rounded-lg border border-purple-900/20"
-                  >
-                    <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
-                      <div>
-                        <h3 className="font-medium text-gray-200">
-                          {subject.name}
-                        </h3>
-                        <p className="text-sm text-gray-400">
-                          {subject.description}
-                        </p>
-                      </div>
-                      <div className="flex gap-2">
-                        {proficiencyLevels.map((level) => (
-                          <button
-                            key={level.value}
-                            onClick={() =>
-                              handleProficiencyChange(subject.id, level.value)
-                            }
-                            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
-                              strengths[subject.id] === level.value
-                                ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
-                                : "bg-[#2d2d3d] text-gray-400 hover:bg-purple-900/30"
-                            }`}
-                          >
-                            {level.value}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-6 sm:p-8 border border-purple-900/30">
+            <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
+              Rate your current proficiency
+            </h2>
+            <div className="space-y-6 mb-4 sm:mb-6">
+              {subjectAreas.map((subject) => (
+                <div key={subject.id}>
+                  <label className="block text-base sm:text-lg font-medium mb-2">
+                    {subject.name}
+                  </label>
+                  <p className="text-xs sm:text-sm text-gray-400 mb-2">
+                    {subject.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 sm:gap-4">
+                    {proficiencyLevels.map((level) => (
+                      <button
+                        key={level.value}
+                        onClick={() =>
+                          handleProficiencyChange(subject.id, level.value)
+                        }
+                        className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm ${
+                          strengths[subject.id] === level.value
+                            ? "bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                            : "bg-[#2d2d3d] text-gray-400"
+                        }`}
+                      >
+                        {level.label}
+                      </button>
+                    ))}
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
             </div>
-
-            {/* Navigation Buttons */}
-            <div className="mt-10 flex justify-between">
+            <div className="flex justify-between">
               <button
                 onClick={prevStep}
-                className="flex items-center px-4 py-2 rounded-lg bg-[#2d2d3d] text-gray-300 hover:bg-purple-900/30 transition-colors"
+                className="px-4 sm:px-6 py-2 sm:py-3 border border-purple-600 rounded-lg font-medium text-sm sm:text-base"
               >
-                <ChevronLeft className="w-4 h-4 mr-1" />
                 Back
               </button>
-
               <button
                 onClick={nextStep}
-                className="flex items-center px-6 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium transition-all shadow-md hover:shadow-purple-500/20"
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg font-medium text-sm sm:text-base"
               >
-                Continue to Assessment
-                <ChevronRight className="w-4 h-4 ml-1" />
+                Next
               </button>
             </div>
           </div>
         )}
 
-        {/* Step 4: Initial Assessment */}
+        {/* Step 4: Study Plan */}
         {step === 4 && (
-          <AssessmentQuiz
-            onComplete={handleAssessmentComplete}
-            onBack={prevStep}
-          />
-        )}
-
-        {/* Step 5: Study Plan Generation */}
-        {step === 5 && assessmentResults && (
-          <>
+          <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-6 sm:p-8 border border-purple-900/30">
             <StudyPlanGenerator
               testDate={testDate}
               targetScore={targetScore}
-              assessmentResults={assessmentResults}
+              strengths={strengths}
               onComplete={handleStudyPlanComplete}
             />
-
-            {/* Final Submit Button */}
-            <div className="mt-8 flex justify-center">
+            <div className="flex justify-between mt-4 sm:mt-6">
+              <button
+                onClick={prevStep}
+                className="px-4 sm:px-6 py-2 sm:py-3 border border-purple-600 rounded-lg font-medium text-sm sm:text-base"
+              >
+                Back
+              </button>
               <button
                 onClick={submitOnboarding}
                 disabled={isSubmitting || !studyPlan}
-                className={`flex items-center px-8 py-3 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-medium transition-all shadow-md hover:shadow-purple-500/20 ${
-                  isSubmitting || !studyPlan
-                    ? "opacity-50 cursor-not-allowed"
-                    : ""
-                }`}
+                className="px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
               >
-                {isSubmitting ? (
-                  <>
-                    <span className="mr-2">Saving...</span>
-                    <div className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
-                  </>
-                ) : (
-                  "Go to Dashboard"
-                )}
+                {isSubmitting ? "Saving..." : "Complete Setup"}
               </button>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

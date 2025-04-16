@@ -1,64 +1,177 @@
-import SubscriptionPlans from "@/components/SubscriptionPlans";
+import Link from "next/link";
+import { Check, X } from "lucide-react";
 
 export default function SubscriptionPage() {
   return (
-    <div className="min-h-screen bg-[#121220] text-white">
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
-            Subscription & Monetization
+    <div className="min-h-screen bg-[#121220] py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold text-white mb-4">
+            Upgrade Your SAT Preparation
           </h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-[#1e1e2f] p-6 rounded-xl border border-purple-900/30 shadow-lg shadow-purple-500/5">
-              <div className="text-purple-500 mb-4">
-                <svg
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-semibold mb-2 text-white">
-                Free Version
-              </h2>
-              <p className="text-gray-400">
-                Access basic features to get started with your SAT/ACT
-                preparation.
-              </p>
+          <p className="text-xl text-gray-300">
+            Get unlimited access to AI-powered SAT training tools and
+            personalized study plans
+          </p>
+        </div>
+
+        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+          {/* Free Plan */}
+          <div className="bg-[#1E1E2E] rounded-lg shadow-xl p-8 border border-gray-700 flex flex-col">
+            <h2 className="text-2xl font-bold text-white mb-2">Free</h2>
+            <div className="flex items-baseline mb-8">
+              <span className="text-5xl font-extrabold text-white">$0</span>
+              <span className="text-gray-400 ml-2">/forever</span>
             </div>
-            <div className="bg-[#1e1e2f] p-6 rounded-xl border border-purple-900/30 shadow-lg shadow-purple-500/5">
-              <div className="text-purple-500 mb-4">
-                <svg
-                  className="h-8 w-8"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                  />
-                </svg>
-              </div>
-              <h2 className="text-xl font-semibold mb-2 text-white">
-                Premium Features
-              </h2>
-              <p className="text-gray-400">
-                Unlock the full potential of our platform with advanced features
-                and unlimited access.
-              </p>
-            </div>
+
+            <ul className="space-y-4 mb-8 flex-grow">
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Limited question bank access
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">1 simulated SAT exam</span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Basic performance tracking
+                </span>
+              </li>
+              <li className="flex items-start">
+                <X className="h-6 w-6 text-red-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-400">
+                  AI explanations and tutoring
+                </span>
+              </li>
+              <li className="flex items-start">
+                <X className="h-6 w-6 text-red-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-400">Personalized study plans</span>
+              </li>
+            </ul>
+
+            <button className="w-full px-4 py-3 border border-gray-600 text-white rounded-md hover:bg-[#2A2A3A] transition-colors">
+              Current Plan
+            </button>
           </div>
-          <SubscriptionPlans />
+
+          {/* Weekly Access Plan */}
+          <div className="bg-[#1E1E2E] rounded-lg shadow-xl p-8 border border-indigo-500 flex flex-col relative">
+            <div className="absolute -top-4 right-4">
+              <span className="bg-indigo-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                POPULAR
+              </span>
+            </div>
+
+            <h2 className="text-2xl font-bold text-white mb-2">
+              Weekly Access
+            </h2>
+            <div className="flex items-baseline mb-8">
+              <span className="text-5xl font-extrabold text-white">$19.99</span>
+              <span className="text-gray-400 ml-2">/week</span>
+            </div>
+
+            <ul className="space-y-4 mb-8 flex-grow">
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">Full question bank access</span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Unlimited simulated SAT exams
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Advanced analytics & progress tracking
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  AI explanations and tutoring
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">Personalized study plans</span>
+              </li>
+            </ul>
+
+            <button className="w-full px-4 py-3 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors font-medium">
+              Subscribe Weekly
+            </button>
+          </div>
+
+          {/* Full Access Plan */}
+          <div className="bg-[#1E1E2E] rounded-lg shadow-xl p-8 border border-gray-700 flex flex-col">
+            <h2 className="text-2xl font-bold text-white mb-2">Full Access</h2>
+            <div className="flex items-baseline mb-8">
+              <span className="text-5xl font-extrabold text-white">$199</span>
+              <span className="text-gray-400 ml-2">/one-time</span>
+            </div>
+
+            <ul className="space-y-4 mb-8 flex-grow">
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">Full question bank access</span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Unlimited simulated SAT exams
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  Advanced analytics & progress tracking
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">
+                  AI explanations and tutoring
+                </span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">Personalized study plans</span>
+              </li>
+              <li className="flex items-start">
+                <Check className="h-6 w-6 text-green-400 mr-2 flex-shrink-0" />
+                <span className="text-gray-300">Lifetime access</span>
+              </li>
+            </ul>
+
+            <button className="w-full px-4 py-3 bg-[#2A2A3A] text-white rounded-md hover:bg-[#353545] transition-colors font-medium">
+              Pay Once
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-16 text-center">
+          <h2 className="text-3xl font-bold text-white mb-4">
+            100% Satisfaction Guarantee
+          </h2>
+          <p className="text-gray-300 max-w-2xl mx-auto">
+            If you're not satisfied with your subscription within the first 7
+            days, we'll provide a full refund. No questions asked.
+          </p>
+        </div>
+
+        <div className="mt-12 text-center">
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Back to Dashboard
+          </Link>
         </div>
       </div>
     </div>

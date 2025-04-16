@@ -2,12 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { ChevronRight, Calendar, Clock, BookOpen, Award } from "lucide-react";
-import { AssessmentResults } from "./AssessmentQuiz";
 
 interface StudyPlanGeneratorProps {
   testDate: string;
   targetScore: number;
-  assessmentResults: AssessmentResults;
+  strengths: Record<string, number>;
   onComplete: (studyPlan: StudyPlan) => void;
 }
 
@@ -70,7 +69,7 @@ const categoryToTopics: Record<string, string[]> = {
 export default function StudyPlanGenerator({
   testDate,
   targetScore,
-  assessmentResults,
+  strengths,
   onComplete,
 }: StudyPlanGeneratorProps) {
   const [generating, setGenerating] = useState(true);
@@ -79,14 +78,14 @@ export default function StudyPlanGenerator({
   useEffect(() => {
     // Simulate generating a study plan (in a real app, this would be more complex)
     const timer = setTimeout(() => {
-      const plan = generateStudyPlan(testDate, targetScore, assessmentResults);
+      const plan = generateStudyPlan(testDate, targetScore, strengths);
       setStudyPlan(plan);
       setGenerating(false);
       onComplete(plan);
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [testDate, targetScore, assessmentResults, onComplete]);
+  }, [testDate, targetScore, strengths, onComplete]);
 
   // Calculate weeks until test date
   const calculateWeeksUntilTest = (testDateStr: string): number => {
@@ -101,25 +100,22 @@ export default function StudyPlanGenerator({
   const generateStudyPlan = (
     testDateStr: string,
     targetScore: number,
-    assessmentResults: AssessmentResults
+    strengths: Record<string, number>
   ): StudyPlan => {
     const weeksUntilTest = calculateWeeksUntilTest(testDateStr);
 
-    // Determine focus areas based on assessment results
-    const focusAreas =
-      assessmentResults.recommendedAreas.length > 0
-        ? assessmentResults.recommendedAreas
-        : Object.keys(assessmentResults.categoryScores);
+    // Determine focus areas based on strengths (prioritize areas with lower scores)
+    const focusAreas = Object.entries(strengths)
+      .sort(([, a], [, b]) => a - b)
+      .map(([category]) => category);
 
-    // Calculate recommended study hours
+    // Calculate recommended study hours based on average strength
+    const avgStrength =
+      Object.values(strengths).reduce((a, b) => a + b, 0) /
+      Object.values(strengths).length;
     const recommendedHoursPerWeek = Math.min(
       20,
-      Math.max(
-        5,
-        Math.ceil(
-          15 - (assessmentResults.score / assessmentResults.totalQuestions) * 10
-        )
-      )
+      Math.max(5, Math.ceil(25 - avgStrength * 4))
     );
 
     // Generate weekly plans
@@ -194,17 +190,20 @@ export default function StudyPlanGenerator({
 
   if (generating) {
     return (
-      <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-8 border border-purple-900/30 text-center">
-        <h2 className="text-2xl font-semibold text-center mb-6">
+      <div className="text-center">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
           Creating Your Study Plan
         </h2>
-        <p className="text-gray-400 mb-8">
-          Analyzing your strengths and areas for improvement...
-        </p>
-
-        <div className="flex flex-col items-center justify-center space-y-4">
-          <div className="w-16 h-16 rounded-full border-4 border-t-transparent border-purple-600 animate-spin"></div>
-          <p className="text-gray-300">This may take a moment...</p>
+        <div className="flex justify-center items-center space-x-2">
+          <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-purple-600 animate-pulse"></div>
+          <div
+            className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-indigo-600 animate-pulse"
+            style={{ animationDelay: "0.2s" }}
+          ></div>
+          <div
+            className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-purple-600 animate-pulse"
+            style={{ animationDelay: "0.4s" }}
+          ></div>
         </div>
       </div>
     );
@@ -213,119 +212,75 @@ export default function StudyPlanGenerator({
   if (!studyPlan) return null;
 
   return (
-    <div className="bg-[#1e1e2f] rounded-xl shadow-lg overflow-hidden p-8 border border-purple-900/30">
-      <h2 className="text-2xl font-semibold text-center mb-2">
+    <div>
+      <h2 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6">
         Your Personalized Study Plan
       </h2>
-      <p className="text-gray-400 text-center mb-8">
-        Based on your assessment results and goals
-      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="bg-[#252538] p-5 rounded-lg border border-purple-900/20">
-          <div className="flex items-start gap-3">
-            <Calendar className="w-6 h-6 text-purple-400 mt-1" />
-            <div>
-              <h3 className="font-medium text-gray-200 mb-1">
-                Time Until Test
-              </h3>
-              <p className="text-gray-400 text-sm">
-                {studyPlan.weeksUntilTest} weeks until your exam
-              </p>
-            </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-8">
+        <div className="bg-[#252538] p-4 rounded-lg border border-purple-900/20">
+          <div className="flex items-center mb-2">
+            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 mr-2" />
+            <h3 className="text-sm sm:text-base font-medium">
+              Time Until Test
+            </h3>
           </div>
+          <p className="text-xl sm:text-2xl font-bold text-white">
+            {studyPlan.weeksUntilTest} weeks
+          </p>
         </div>
 
-        <div className="bg-[#252538] p-5 rounded-lg border border-purple-900/20">
-          <div className="flex items-start gap-3">
-            <Clock className="w-6 h-6 text-purple-400 mt-1" />
-            <div>
-              <h3 className="font-medium text-gray-200 mb-1">
-                Recommended Study Time
-              </h3>
-              <p className="text-gray-400 text-sm">
-                {studyPlan.recommendedHoursPerWeek} hours per week
-              </p>
-            </div>
+        <div className="bg-[#252538] p-4 rounded-lg border border-purple-900/20">
+          <div className="flex items-center mb-2">
+            <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 mr-2" />
+            <h3 className="text-sm sm:text-base font-medium">
+              Recommended Study Time
+            </h3>
           </div>
-        </div>
-
-        <div className="bg-[#252538] p-5 rounded-lg border border-purple-900/20">
-          <div className="flex items-start gap-3">
-            <BookOpen className="w-6 h-6 text-purple-400 mt-1" />
-            <div>
-              <h3 className="font-medium text-gray-200 mb-1">Focus Areas</h3>
-              <p className="text-gray-400 text-sm">
-                {studyPlan.focusAreas
-                  .map((area) =>
-                    area === "reading"
-                      ? "Reading & Writing"
-                      : area === "math_no_calc"
-                      ? "Math (No Calculator)"
-                      : "Math (Calculator)"
-                  )
-                  .join(", ")}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-[#252538] p-5 rounded-lg border border-purple-900/20">
-          <div className="flex items-start gap-3">
-            <Award className="w-6 h-6 text-purple-400 mt-1" />
-            <div>
-              <h3 className="font-medium text-gray-200 mb-1">Target Score</h3>
-              <p className="text-gray-400 text-sm">{targetScore} out of 1600</p>
-            </div>
-          </div>
+          <p className="text-xl sm:text-2xl font-bold text-white">
+            {studyPlan.recommendedHoursPerWeek} hours/week
+          </p>
         </div>
       </div>
 
-      {/* Sample Weekly Plan Preview */}
-      {studyPlan.weeklyPlans.length > 0 && (
-        <div className="bg-[#252538] p-5 rounded-lg border border-purple-900/20 mb-8">
-          <h3 className="font-medium text-gray-200 mb-3">
-            Week 1 Focus:{" "}
-            {studyPlan.weeklyPlans[0].focus === "reading"
-              ? "Reading & Writing"
-              : studyPlan.weeklyPlans[0].focus === "math_no_calc"
-              ? "Math (No Calculator)"
-              : "Math (Calculator)"}
+      <div className="bg-[#252538] p-4 rounded-lg border border-purple-900/20 mb-4 sm:mb-8">
+        <div className="flex items-center mb-3 sm:mb-4">
+          <BookOpen className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 mr-2" />
+          <h3 className="text-sm sm:text-base font-medium">
+            Focus Areas (In Order)
           </h3>
-
-          <div className="space-y-4">
-            <div>
-              <h4 className="text-sm font-medium text-purple-400 mb-2">
-                Weekly Goals:
-              </h4>
-              <ul className="list-disc pl-5 text-sm text-gray-300 space-y-1">
-                {studyPlan.weeklyPlans[0].goals.map((goal, index) => (
-                  <li key={index}>{goal}</li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="text-sm font-medium text-purple-400 mb-2">
-                Sample Day (Monday):
-              </h4>
-              <ul className="list-disc pl-5 text-sm text-gray-300 space-y-1">
-                {studyPlan.weeklyPlans[0].dailyTasks[0].tasks.map(
-                  (task, index) => (
-                    <li key={index}>{task}</li>
-                  )
-                )}
-              </ul>
-            </div>
-          </div>
         </div>
-      )}
+        <ul className="space-y-2 sm:space-y-3">
+          {studyPlan.focusAreas.map((area, index) => (
+            <li key={area} className="flex items-center">
+              <span className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-purple-600 flex items-center justify-center text-xs sm:text-sm mr-2">
+                {index + 1}
+              </span>
+              <span className="text-sm sm:text-base">
+                {area === "reading"
+                  ? "Reading & Writing"
+                  : area === "math_no_calc"
+                  ? "Math (No Calculator)"
+                  : "Math (Calculator)"}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <div className="text-center">
-        <p className="text-gray-400 text-sm mb-6">
-          Your complete study plan is now available in your dashboard. We'll
-          send you daily reminders to keep you on track!
-        </p>
+      <div className="bg-[#252538] p-4 rounded-lg border border-purple-900/20">
+        <div className="flex items-center mb-3 sm:mb-4">
+          <Award className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 mr-2" />
+          <h3 className="text-sm sm:text-base font-medium">Week 1 Preview</h3>
+        </div>
+        <div className="space-y-3 sm:space-y-4">
+          {studyPlan.weeklyPlans[0].goals.map((goal, index) => (
+            <div key={index} className="flex items-start">
+              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400 mr-2 flex-shrink-0 mt-0.5" />
+              <span className="text-sm sm:text-base">{goal}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
