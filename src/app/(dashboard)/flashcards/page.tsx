@@ -23,6 +23,13 @@ import {
   Loader,
   X,
   Home,
+  Archive,
+  Star,
+  Filter,
+  Search,
+  BookOpen,
+  FileText,
+  BookOpenCheck,
 } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 
@@ -262,8 +269,11 @@ Include detailed explanations and steps in the answers. For math questions, incl
       }
 
       // Extract JSON from the response (might be wrapped in markdown code blocks)
-      const jsonMatch = content.match(/```(?:json)?([\s\S]*?)```/) || content;
-      const jsonContent = jsonMatch[1] || jsonMatch;
+      const jsonMatch = content.match(/```(?:json)?([\s\S]*?)```/);
+      const jsonContent =
+        typeof jsonMatch === "object" && jsonMatch !== null && jsonMatch[1]
+          ? jsonMatch[1]
+          : content;
 
       // Parse the generated flashcards
       let generatedCards;
@@ -376,310 +386,649 @@ Include detailed explanations and steps in the answers. For math questions, incl
 
   return (
     <DashboardLayout>
-      <div
-        className={`container mx-auto px-4 py-8 ${isDarkMode ? "dark" : ""}`}
-      >
-        <div className="mb-6 flex justify-between items-center">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+      <div className="w-full">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-500 bg-clip-text text-transparent">
             Flashcards
           </h1>
-          <div className="flex space-x-2">
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full bg-[#1e1e2f] text-gray-300 hover:bg-purple-700/20 hover:text-purple-400"
-            >
-              {isDarkMode ? (
-                <Moon className="w-5 h-5" />
-              ) : (
-                <Sun className="w-5 h-5" />
-              )}
-            </button>
-            <button
-              onClick={() => setShowAddModal(true)}
-              className="p-2 rounded-full bg-[#1e1e2f] text-gray-300 hover:bg-purple-700/20 hover:text-purple-400"
-              title="Add Flashcard"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
-            <button
-              onClick={() => setShowGenerateModal(true)}
-              className="p-2 rounded-full bg-[#1e1e2f] text-gray-300 hover:bg-purple-700/20 hover:text-purple-400"
-              title="Generate with AI"
-            >
-              <Bot className="w-5 h-5" />
-            </button>
-          </div>
+          <p className="text-gray-400 mt-2">
+            Create, study, and master key concepts with spaced repetition
+          </p>
         </div>
 
-        {flashcards.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-[60vh] bg-[#1e1e2f] rounded-xl p-10 border border-purple-900/30">
-            <h2 className="text-2xl font-bold mb-4 text-center">
-              You don't have any flashcards yet
-            </h2>
-            <p className="text-gray-400 mb-8 text-center max-w-md">
-              Create your own flashcards or let AI generate some for you based
-              on the topics you're studying.
-            </p>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-700 transition-colors flex items-center"
-              >
-                <Plus className="w-4 h-4 mr-2" /> Add Flashcard
-              </button>
-              <button
-                onClick={() => setShowGenerateModal(true)}
-                className="px-6 py-3 rounded-lg bg-[#252538] hover:bg-[#2d2d3d] transition-colors flex items-center"
-              >
-                <Sparkles className="w-4 h-4 mr-2" /> Generate Flashcards
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div className="bg-[#1e1e2f] rounded-xl p-6 border border-purple-900/30 mb-4">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-sm text-gray-400">
-                  Card {currentCardIndex + 1} of {flashcards.length}
-                </span>
-                <div className="flex space-x-2">
-                  <button
-                    onClick={deleteFlashcard}
-                    className="p-2 rounded-full text-gray-300 hover:bg-red-900/20 hover:text-red-400"
-                    title="Delete Card"
-                  >
-                    <X className="w-4 h-4" />
+        {/* Tabs Navigation */}
+        <div className="flex border-b border-purple-900/30 mb-6">
+          <button className="px-6 py-3 font-medium text-sm transition-colors text-purple-400 border-b-2 border-purple-500">
+            Study
+          </button>
+          <button className="px-6 py-3 font-medium text-sm transition-colors text-gray-400 hover:text-gray-300">
+            My Decks
+          </button>
+          <button className="px-6 py-3 font-medium text-sm transition-colors text-gray-400 hover:text-gray-300">
+            Browse
+          </button>
+        </div>
+
+        {/* Main content area */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Left sidebar/filters */}
+          <div className="col-span-1 lg:col-span-3">
+            <div className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-4 sticky top-4">
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-300 mb-3">
+                  Categories
+                </h3>
+                <div className="space-y-2">
+                  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-white bg-purple-600 rounded-lg">
+                    <span>All Cards</span>
+                    <span className="bg-white/20 px-2 py-0.5 rounded-full text-xs">
+                      {flashcards.length}
+                    </span>
+                  </button>
+                  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-300 hover:bg-[#252538] rounded-lg">
+                    <span>Mathematics</span>
+                    <span className="bg-[#2d2d3f] px-2 py-0.5 rounded-full text-xs">
+                      12
+                    </span>
+                  </button>
+                  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-300 hover:bg-[#252538] rounded-lg">
+                    <span>Reading</span>
+                    <span className="bg-[#2d2d3f] px-2 py-0.5 rounded-full text-xs">
+                      8
+                    </span>
+                  </button>
+                  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-300 hover:bg-[#252538] rounded-lg">
+                    <span>Writing</span>
+                    <span className="bg-[#2d2d3f] px-2 py-0.5 rounded-full text-xs">
+                      5
+                    </span>
                   </button>
                 </div>
               </div>
 
-              <div
-                className={`relative w-full h-64 mx-auto cursor-pointer transition-transform duration-500 transform-gpu ${
-                  isFlipped ? "rotate-y-180" : ""
-                }`}
-                onClick={flipCard}
-              >
-                <div
-                  className={`absolute inset-0 backface-hidden bg-[#252538] rounded-xl p-8 flex flex-col justify-center items-center transition-opacity duration-500 ${
-                    isFlipped ? "opacity-0" : "opacity-100"
-                  }`}
-                >
-                  <div className="text-lg text-center">
-                    {flashcards[currentCardIndex]?.front}
-                  </div>
-                  <div className="absolute bottom-4 right-4 text-xs text-gray-500">
-                    {flashcards[currentCardIndex]?.category}
-                  </div>
-                </div>
-                <div
-                  className={`absolute inset-0 backface-hidden bg-[#252538] rounded-xl p-8 flex flex-col justify-center items-center transition-opacity duration-500 ${
-                    isFlipped ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  <div className="text-md overflow-auto max-h-full">
-                    {flashcards[currentCardIndex]?.back}
-                  </div>
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-300 mb-3">
+                  Review Status
+                </h3>
+                <div className="space-y-2">
+                  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-300 hover:bg-[#252538] rounded-lg">
+                    <span className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-yellow-400" />
+                      Due for Review
+                    </span>
+                    <span className="bg-[#2d2d3f] px-2 py-0.5 rounded-full text-xs">
+                      4
+                    </span>
+                  </button>
+                  <button className="w-full flex items-center justify-between px-3 py-2 text-sm text-gray-300 hover:bg-[#252538] rounded-lg">
+                    <span className="flex items-center gap-2">
+                      <Archive className="h-4 w-4 text-blue-400" />
+                      Mastered
+                    </span>
+                    <span className="bg-[#2d2d3f] px-2 py-0.5 rounded-full text-xs">
+                      16
+                    </span>
+                  </button>
                 </div>
               </div>
 
-              <div className="flex justify-between items-center mt-6">
-                <button
-                  onClick={goToPrevCard}
-                  disabled={currentCardIndex === 0}
-                  className={`p-2 rounded-lg flex items-center gap-1 ${
-                    currentCardIndex === 0
-                      ? "text-gray-600 cursor-not-allowed"
-                      : "text-gray-300 hover:bg-purple-700/20 hover:text-purple-400"
-                  }`}
+              <div>
+                <h3 className="text-sm font-medium text-gray-300 mb-3">
+                  Actions
+                </h3>
+                <div className="space-y-2">
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Create Flashcard
+                  </button>
+                  <button
+                    onClick={() => setShowGenerateModal(true)}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#252538] hover:bg-[#2d2d3f] text-gray-300 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Generate with AI
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Main content */}
+          <div className="col-span-1 lg:col-span-9">
+            {/* Flashcard study area */}
+            {flashcards.length > 0 ? (
+              <div className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-6">
+                {/* Existing flashcard content here */}
+                <div className="flex justify-between items-center mb-6">
+                  <div>
+                    <h2 className="text-xl font-semibold text-white">
+                      Study Session
+                    </h2>
+                    <p className="text-sm text-gray-400">
+                      Card {currentCardIndex + 1} of {flashcards.length}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={goToPrevCard}
+                      disabled={currentCardIndex === 0}
+                      className={`p-2 rounded-lg ${
+                        currentCardIndex === 0
+                          ? "text-gray-600 cursor-not-allowed"
+                          : "text-gray-300 hover:bg-[#252538]"
+                      }`}
+                    >
+                      <ArrowLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={goToNextCard}
+                      disabled={currentCardIndex >= flashcards.length - 1}
+                      className={`p-2 rounded-lg ${
+                        currentCardIndex >= flashcards.length - 1
+                          ? "text-gray-600 cursor-not-allowed"
+                          : "text-gray-300 hover:bg-[#252538]"
+                      }`}
+                    >
+                      <ArrowRight className="h-5 w-5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Flashcard */}
+                <div
+                  className="relative w-full h-80 perspective-1000 mb-6 cursor-pointer"
+                  onClick={flipCard}
                 >
-                  <ArrowLeft className="w-4 h-4" /> Previous
-                </button>
-                <div className="flex space-x-3">
+                  <div
+                    className={`absolute inset-0 transition-all duration-500 transform-style preserve-3d ${
+                      isFlipped ? "rotate-y-180" : ""
+                    }`}
+                  >
+                    {/* Front side */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-900/40 to-indigo-900/40 rounded-xl p-6 border border-purple-500/30 backface-hidden">
+                      <div className="h-full flex flex-col">
+                        <div className="text-xs text-purple-300 mb-2">
+                          {flashcards[currentCardIndex]?.category}
+                        </div>
+                        <div className="flex-1 flex items-center justify-center">
+                          <h3 className="text-2xl text-white text-center">
+                            {flashcards[currentCardIndex]?.front}
+                          </h3>
+                        </div>
+                        <div className="text-sm text-gray-400 text-center mt-4">
+                          Click to flip
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Back side */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/40 to-purple-900/40 rounded-xl p-6 border border-indigo-500/30 rotate-y-180 backface-hidden">
+                      <div className="h-full flex flex-col">
+                        <div className="text-xs text-indigo-300 mb-2">
+                          Answer
+                        </div>
+                        <div className="flex-1 overflow-y-auto">
+                          <div className="text-white">
+                            {flashcards[currentCardIndex]?.back}
+                          </div>
+                        </div>
+                        <div className="text-sm text-gray-400 text-center mt-4">
+                          Rate your answer
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Rating buttons */}
+                <div className="flex justify-center gap-4">
                   <button
                     onClick={() => rateCardDifficulty("hard")}
-                    className="p-2 rounded-lg bg-[#252538] hover:bg-red-900/20 text-gray-300 hover:text-red-400 flex items-center"
-                    title="Hard - Review Soon"
+                    className="flex flex-col items-center p-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400"
                   >
-                    <Frown className="w-4 h-4" />
+                    <Frown className="h-6 w-6 mb-1" />
+                    <span className="text-xs">Hard</span>
                   </button>
                   <button
                     onClick={() => rateCardDifficulty("medium")}
-                    className="p-2 rounded-lg bg-[#252538] hover:bg-yellow-900/20 text-gray-300 hover:text-yellow-400 flex items-center"
-                    title="Medium - Review Later"
+                    className="flex flex-col items-center p-3 rounded-lg bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-yellow-400"
                   >
-                    <Meh className="w-4 h-4" />
+                    <Meh className="h-6 w-6 mb-1" />
+                    <span className="text-xs">Medium</span>
                   </button>
                   <button
                     onClick={() => rateCardDifficulty("easy")}
-                    className="p-2 rounded-lg bg-[#252538] hover:bg-green-900/20 text-gray-300 hover:text-green-400 flex items-center"
-                    title="Easy - Long Interval"
+                    className="flex flex-col items-center p-3 rounded-lg bg-green-500/10 hover:bg-green-500/20 border border-green-500/30 text-green-400"
                   >
-                    <Smile className="w-4 h-4" />
+                    <Smile className="h-6 w-6 mb-1" />
+                    <span className="text-xs">Easy</span>
                   </button>
                 </div>
-                <button
-                  onClick={goToNextCard}
-                  disabled={currentCardIndex === flashcards.length - 1}
-                  className={`p-2 rounded-lg flex items-center gap-1 ${
-                    currentCardIndex === flashcards.length - 1
-                      ? "text-gray-600 cursor-not-allowed"
-                      : "text-gray-300 hover:bg-purple-700/20 hover:text-purple-400"
-                  }`}
-                >
-                  Next <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
-            </div>
-          </div>
-        )}
+            ) : (
+              <div className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-8 text-center">
+                <BookOpenCheck className="h-12 w-12 text-gray-500 mx-auto mb-3" />
+                <h3 className="text-xl font-semibold text-white mb-2">
+                  No Flashcards Yet
+                </h3>
+                <p className="text-gray-400 mb-6 max-w-md mx-auto">
+                  Create your first flashcard to start studying, or generate a
+                  set with AI to quickly build your collection.
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <button
+                    onClick={() => setShowAddModal(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Create Flashcard
+                  </button>
+                  <button
+                    onClick={() => setShowGenerateModal(true)}
+                    className="flex items-center gap-2 px-4 py-2 bg-[#252538] hover:bg-[#2d2d3f] text-gray-300 rounded-lg text-sm font-medium transition-colors"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    Generate with AI
+                  </button>
+                </div>
+              </div>
+            )}
 
-        {/* Add Flashcard Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[#1e1e2f] rounded-xl p-6 w-full max-w-md border border-purple-900/30">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">Add Flashcard</h2>
-                <button
-                  onClick={() => setShowAddModal(false)}
-                  className="p-2 text-gray-400 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
+            {/* Statistics */}
+            {flashcards.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div className="bg-[#1e1e2f] p-5 rounded-xl border border-purple-900/30">
+                  <h3 className="text-sm text-gray-400 mb-1">Total Cards</h3>
+                  <p className="text-3xl font-bold text-white">
+                    {flashcards.length}
+                  </p>
+                  <div className="mt-2 text-xs text-gray-400">
+                    Across{" "}
+                    {new Set(flashcards.map((card) => card.category)).size}{" "}
+                    categories
+                  </div>
+                </div>
+
+                <div className="bg-[#1e1e2f] p-5 rounded-xl border border-purple-900/30">
+                  <h3 className="text-sm text-gray-400 mb-1">Mastery Level</h3>
+                  <p className="text-3xl font-bold text-white">
+                    {Math.round(
+                      (flashcards.filter((card) => card.srsLevel >= 4).length /
+                        flashcards.length) *
+                        100
+                    )}
+                    %
+                  </p>
+                  <div className="mt-2 text-xs text-gray-400">
+                    {flashcards.filter((card) => card.srsLevel >= 4).length}{" "}
+                    cards mastered
+                  </div>
+                </div>
+
+                <div className="bg-[#1e1e2f] p-5 rounded-xl border border-purple-900/30">
+                  <h3 className="text-sm text-gray-400 mb-1">Due for Review</h3>
+                  <p className="text-3xl font-bold text-white">
+                    {
+                      flashcards.filter(
+                        (card) => new Date(card.nextReview) <= new Date()
+                      ).length
+                    }
+                  </p>
+                  <div className="mt-2 text-xs text-gray-400">
+                    Cards to review today
+                  </div>
+                </div>
               </div>
-              <form onSubmit={handleAddFlashcard}>
-                <div className="mb-4">
-                  <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="category"
-                  >
-                    Category
-                  </label>
-                  <input
-                    type="text"
-                    id="category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
-                    placeholder="Math, Reading, etc."
-                  />
+            )}
+
+            {/* Your Progress Section */}
+            {flashcards.length > 0 && (
+              <div className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-6 mt-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold text-white">
+                    Your Progress
+                  </h2>
+                  <select className="bg-[#252538] text-gray-300 text-sm border border-purple-900/30 rounded-lg px-3 py-1.5">
+                    <option>All Time</option>
+                    <option>This Week</option>
+                    <option>This Month</option>
+                  </select>
                 </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="front"
-                  >
-                    Front (Question)
-                  </label>
-                  <textarea
-                    id="front"
-                    value={frontContent}
-                    onChange={(e) => setFrontContent(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500 h-24"
-                    placeholder="What is the quadratic formula?"
-                    required
-                  />
-                </div>
+
+                {/* Progress by category */}
                 <div className="mb-6">
-                  <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="back"
-                  >
-                    Back (Answer)
-                  </label>
-                  <textarea
-                    id="back"
-                    value={backContent}
-                    onChange={(e) => setBackContent(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500 h-24"
-                    placeholder="x = (-b ± √(b² - 4ac)) / 2a"
-                    required
-                  />
-                </div>
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setShowAddModal(false)}
-                    className="px-4 py-2 mr-2 rounded-lg text-gray-300 hover:bg-[#252538]"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-colors"
-                  >
-                    Save Flashcard
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+                  <h3 className="text-sm font-medium text-gray-300 mb-4">
+                    Progress by Category
+                  </h3>
+                  <div className="space-y-4">
+                    {Array.from(
+                      new Set(flashcards.map((card) => card.category))
+                    ).map((category) => {
+                      const categoryCards = flashcards.filter(
+                        (card) => card.category === category
+                      );
+                      const masteredCount = categoryCards.filter(
+                        (card) => card.srsLevel >= 4
+                      ).length;
+                      const progress = Math.round(
+                        (masteredCount / categoryCards.length) * 100
+                      );
 
-        {/* Generate Flashcards Modal */}
-        {showGenerateModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[#1e1e2f] rounded-xl p-6 w-full max-w-md border border-purple-900/30">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold">
-                  Generate Flashcards with AI
-                </h2>
-                <button
-                  onClick={() => setShowGenerateModal(false)}
-                  className="p-2 text-gray-400 hover:text-white"
-                  disabled={isGenerating}
+                      return (
+                        <div key={category as string} className="space-y-1">
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-300">{category}</span>
+                            <span className="text-gray-400">
+                              {masteredCount}/{categoryCards.length} cards
+                            </span>
+                          </div>
+                          <div className="w-full h-2 bg-[#252538] rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full"
+                              style={{
+                                width: `${progress}%`,
+                                background:
+                                  progress < 30
+                                    ? "linear-gradient(to right, #f87171, #fb923c)"
+                                    : progress < 70
+                                    ? "linear-gradient(to right, #facc15, #a3e635)"
+                                    : "linear-gradient(to right, #4ade80, #22d3ee)",
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Learning timeline */}
+                <div className="mb-6">
+                  <h3 className="text-sm font-medium text-gray-300 mb-4">
+                    Learning Timeline
+                  </h3>
+                  <div className="h-48 relative">
+                    <div className="absolute inset-0">
+                      {/* Grid lines */}
+                      <div className="grid grid-cols-7 h-full">
+                        {[...Array(7)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="border-l border-purple-900/20 h-full"
+                          ></div>
+                        ))}
+                      </div>
+                      <div className="grid grid-rows-4 w-full absolute top-0 left-0">
+                        {[...Array(4)].map((_, i) => (
+                          <div
+                            key={i}
+                            className="border-b border-purple-900/20 w-full"
+                          ></div>
+                        ))}
+                      </div>
+
+                      {/* Activity dots - This would be more dynamic in a real app */}
+                      <div className="absolute bottom-12 left-[10%] w-3 h-3 rounded-full bg-purple-500"></div>
+                      <div className="absolute bottom-20 left-[25%] w-3 h-3 rounded-full bg-purple-500"></div>
+                      <div className="absolute bottom-36 left-[40%] w-3 h-3 rounded-full bg-purple-500"></div>
+                      <div className="absolute bottom-28 left-[55%] w-3 h-3 rounded-full bg-purple-500"></div>
+                      <div className="absolute bottom-16 left-[70%] w-3 h-3 rounded-full bg-purple-500"></div>
+                      <div className="absolute bottom-24 left-[85%] w-3 h-3 rounded-full bg-purple-500"></div>
+
+                      {/* Line connecting dots */}
+                      <svg
+                        className="absolute inset-0 w-full h-full overflow-visible"
+                        preserveAspectRatio="none"
+                      >
+                        <path
+                          d="M10%,calc(100% - 3rem) 25%,calc(100% - 5rem) 40%,calc(100% - 9rem) 55%,calc(100% - 7rem) 70%,calc(100% - 4rem) 85%,calc(100% - 6rem)"
+                          fill="none"
+                          stroke="#8b5cf6"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeDasharray="4 4"
+                        />
+                      </svg>
+                    </div>
+
+                    {/* X-axis labels */}
+                    <div className="flex justify-between text-xs text-gray-500 absolute bottom-0 w-full">
+                      <span>Mon</span>
+                      <span>Tue</span>
+                      <span>Wed</span>
+                      <span>Thu</span>
+                      <span>Fri</span>
+                      <span>Sat</span>
+                      <span>Sun</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Study habits */}
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-300 mb-4">
+                      Study Habits
+                    </h3>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className="bg-[#252538] rounded-lg p-3">
+                        <span className="text-xs text-gray-400">Best day</span>
+                        <p className="text-lg font-medium text-white">
+                          Wednesday
+                        </p>
+                      </div>
+                      <div className="bg-[#252538] rounded-lg p-3">
+                        <span className="text-xs text-gray-400">Best time</span>
+                        <p className="text-lg font-medium text-white">
+                          Evening
+                        </p>
+                      </div>
+                      <div className="bg-[#252538] rounded-lg p-3">
+                        <span className="text-xs text-gray-400">
+                          Avg. session
+                        </span>
+                        <p className="text-lg font-medium text-white">15 min</p>
+                      </div>
+                      <div className="bg-[#252538] rounded-lg p-3">
+                        <span className="text-xs text-gray-400">
+                          Efficiency
+                        </span>
+                        <p className="text-lg font-medium text-white">High</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-300 mb-4">
+                      Recommendations
+                    </h3>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start gap-2">
+                        <span className="text-purple-400 mt-0.5">•</span>
+                        <span className="text-gray-300">
+                          Review Mathematics cards more regularly
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-purple-400 mt-0.5">•</span>
+                        <span className="text-gray-300">
+                          Create more cards for Reading section
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <span className="text-purple-400 mt-0.5">•</span>
+                        <span className="text-gray-300">
+                          Schedule daily 10-min review sessions
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Add Flashcard Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-6 max-w-lg w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-white">
+                Create New Flashcard
+              </h2>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-gray-400 hover:text-gray-300"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddFlashcard}>
+              <div className="mb-4">
+                <label
+                  htmlFor="frontContent"
+                  className="block text-sm font-medium text-gray-300 mb-1"
                 >
-                  <X className="w-5 h-5" />
+                  Front (Question)
+                </label>
+                <textarea
+                  id="frontContent"
+                  className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  placeholder="Enter the question or term"
+                  rows={3}
+                  value={frontContent}
+                  onChange={(e) => setFrontContent(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="backContent"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+                >
+                  Back (Answer)
+                </label>
+                <textarea
+                  id="backContent"
+                  className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  placeholder="Enter the answer or definition"
+                  rows={5}
+                  value={backContent}
+                  onChange={(e) => setBackContent(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="mb-6">
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+                >
+                  Category
+                </label>
+                <input
+                  id="category"
+                  type="text"
+                  className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  placeholder="e.g., Math, Reading, Writing, etc."
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="px-4 py-2 bg-[#252538] hover:bg-[#2d2d3f] text-gray-300 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg text-sm font-medium transition-colors"
+                >
+                  Create Card
                 </button>
               </div>
-              <form onSubmit={generateFlashcards}>
-                <div className="mb-4">
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Generate Flashcards Modal */}
+      {showGenerateModal && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-6 max-w-lg w-full">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-semibold text-white">
+                Generate Flashcards with AI
+              </h2>
+              <button
+                onClick={() => setShowGenerateModal(false)}
+                className="text-gray-400 hover:text-gray-300"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form onSubmit={generateFlashcards}>
+              <div className="mb-4">
+                <label
+                  htmlFor="topic"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+                >
+                  Topic
+                </label>
+                <input
+                  id="topic"
+                  type="text"
+                  className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  placeholder="e.g., Quadratic equations, Reading comprehension, etc."
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="mb-4">
+                <label
+                  htmlFor="category"
+                  className="block text-sm font-medium text-gray-300 mb-1"
+                >
+                  Category
+                </label>
+                <input
+                  id="category"
+                  type="text"
+                  className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  placeholder="e.g., Math, Reading, Writing, etc."
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div>
                   <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="ai-topic"
-                  >
-                    Topic
-                  </label>
-                  <input
-                    type="text"
-                    id="ai-topic"
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
-                    placeholder="SAT Algebra, Reading Comprehension, etc."
-                    required
-                    disabled={isGenerating}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="ai-category"
-                  >
-                    Category
-                  </label>
-                  <input
-                    type="text"
-                    id="ai-category"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
-                    placeholder="Math, Reading, etc."
-                    disabled={isGenerating}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="ai-number"
+                    htmlFor="numCards"
+                    className="block text-sm font-medium text-gray-300 mb-1"
                   >
                     Number of Cards
                   </label>
                   <select
-                    id="ai-number"
+                    id="numCards"
+                    className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                     value={numCards}
                     onChange={(e) => setNumCards(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
-                    disabled={isGenerating}
                   >
                     <option value="5">5 cards</option>
                     <option value="10">10 cards</option>
@@ -687,57 +1036,56 @@ Include detailed explanations and steps in the answers. For math questions, incl
                     <option value="20">20 cards</option>
                   </select>
                 </div>
-                <div className="mb-6">
+                <div>
                   <label
-                    className="block text-sm font-medium text-gray-400 mb-1"
-                    htmlFor="ai-difficulty"
+                    htmlFor="difficulty"
+                    className="block text-sm font-medium text-gray-300 mb-1"
                   >
                     Difficulty
                   </label>
                   <select
-                    id="ai-difficulty"
+                    id="difficulty"
+                    className="w-full p-3 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50"
                     value={difficulty}
                     onChange={(e) => setDifficulty(e.target.value)}
-                    className="w-full p-2 bg-[#252538] border border-purple-900/30 rounded-lg text-white focus:outline-none focus:ring-1 focus:ring-purple-500"
-                    disabled={isGenerating}
                   >
                     <option value="beginner">Beginner</option>
                     <option value="medium">Intermediate</option>
                     <option value="advanced">Advanced</option>
                   </select>
                 </div>
-                <div className="flex justify-end">
-                  <button
-                    type="button"
-                    onClick={() => setShowGenerateModal(false)}
-                    className="px-4 py-2 mr-2 rounded-lg text-gray-300 hover:bg-[#252538]"
-                    disabled={isGenerating}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white transition-colors flex items-center"
-                    disabled={isGenerating || !topic.trim()}
-                  >
-                    {isGenerating ? (
-                      <>
-                        <Loader className="w-4 h-4 mr-2 animate-spin" />{" "}
-                        Generating...
-                      </>
-                    ) : (
-                      <>
-                        <Sparkles className="w-4 h-4 mr-2" /> Generate
-                        Flashcards
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            </div>
+              </div>
+
+              <div className="flex justify-end gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowGenerateModal(false)}
+                  className="px-4 py-2 bg-[#252538] hover:bg-[#2d2d3f] text-gray-300 rounded-lg text-sm font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isGenerating}
+                  className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader className="h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      Generate
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

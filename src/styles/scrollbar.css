@@ -1,0 +1,100 @@
+/* Custom scrollbar styles */
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(147, 51, 234, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 100vh;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(147, 51, 234, 0.5);
+  border-radius: 100vh;
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(168, 85, 247, 0.7);
+  width: 8px;
+}
+
+/* Hover effect - show scrollbar more prominently on hover */
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(168, 85, 247, 0.6);
+}
+
+.custom-scrollbar.thin-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar.thin-scrollbar:hover::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* For Firefox */
+@supports (scrollbar-color: auto) {
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(147, 51, 234, 0.5) transparent;
+  }
+
+  .custom-scrollbar:hover {
+    scrollbar-color: rgba(168, 85, 247, 0.7) transparent;
+  }
+}
+
+/* Additional animation for smooth scrolling */
+.custom-scrollbar {
+  scroll-behavior: smooth;
+}
+
+/* Custom dark theme scrollbar */
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(168, 85, 247, 0.5);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(192, 132, 252, 0.7);
+}
+
+/* Scroll indicators */
+.scroll-indicator-bottom {
+  position: relative;
+}
+
+.scroll-indicator-bottom::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: linear-gradient(to top, rgba(30, 30, 47, 0.8), transparent);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.scroll-indicator-bottom.can-scroll-down::after {
+  opacity: 1;
+}
+
+/* Dark theme variant */
+.dark .scroll-indicator-bottom::after {
+  background: linear-gradient(to top, rgba(26, 32, 44, 0.8), transparent);
+}
+
+/* Custom styles for AI lessons sidebar */
+.ai-sidebar.scroll-indicator-bottom::after {
+  background: linear-gradient(to top, rgba(19, 19, 31, 0.8), transparent);
+}

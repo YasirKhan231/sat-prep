@@ -334,7 +334,7 @@ export default function AIChatPage() {
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="space-y-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
             AI Study Assistant

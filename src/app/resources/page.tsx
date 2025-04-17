@@ -372,9 +372,9 @@ export default function ResourcesPage() {
 
   return (
     <DashboardLayout>
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-indigo-500 bg-clip-text text-transparent">
             SAT Study Resources
           </h1>
           <p className="text-gray-400 mt-2">
@@ -385,7 +385,7 @@ export default function ResourcesPage() {
 
         {/* Featured resources */}
         {featuredResources.length > 0 && (
-          <div className="mb-10">
+          <div className="mb-8">
             <h2 className="text-xl font-semibold mb-4 flex items-center">
               <Star className="text-yellow-400 mr-2 h-5 w-5" />
               Featured Resources
@@ -396,7 +396,7 @@ export default function ResourcesPage() {
                   href={resource.url}
                   key={resource.id}
                   target={resource.type === "link" ? "_blank" : "_self"}
-                  className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-5 hover:border-purple-500/50 transition-all"
+                  className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-5 hover:border-purple-500/50 transition-all hover:shadow-[0_0_15px_rgba(149,76,233,0.15)]"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div
@@ -413,7 +413,9 @@ export default function ResourcesPage() {
                       </div>
                     )}
                   </div>
-                  <h3 className="font-semibold mb-2">{resource.title}</h3>
+                  <h3 className="font-semibold mb-2 text-white">
+                    {resource.title}
+                  </h3>
                   <p className="text-sm text-gray-400 mb-3">
                     {resource.description}
                   </p>
@@ -569,7 +571,9 @@ export default function ResourcesPage() {
         ) : (
           <div className="space-y-6">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-semibold">All Resources</h2>
+              <h2 className="text-xl font-semibold text-white">
+                All Resources
+              </h2>
               <div className="text-sm text-gray-400">
                 Showing {filteredResources.length} resource
                 {filteredResources.length !== 1 ? "s" : ""}
@@ -582,7 +586,7 @@ export default function ResourcesPage() {
                   href={resource.url}
                   key={resource.id}
                   target={resource.type === "link" ? "_blank" : "_self"}
-                  className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-5 hover:border-purple-500/50 transition-all"
+                  className="bg-[#1e1e2f] rounded-xl border border-purple-900/30 p-5 hover:border-purple-500/50 hover:shadow-[0_0_15px_rgba(149,76,233,0.15)] transition-all"
                 >
                   <div className="flex justify-between items-start mb-3">
                     <div
@@ -599,7 +603,9 @@ export default function ResourcesPage() {
                       </div>
                     )}
                   </div>
-                  <h3 className="font-semibold mb-2">{resource.title}</h3>
+                  <h3 className="font-semibold mb-2 text-white">
+                    {resource.title}
+                  </h3>
                   <p className="text-sm text-gray-400 mb-3">
                     {resource.description}
                   </p>
